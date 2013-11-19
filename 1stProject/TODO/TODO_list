@@ -1,0 +1,9 @@
+TODO LIST:
+
+- Mediator Entity
+- Setup phase for CP-ABE
+- Key Generation for CP-ABE (including mediator)
+- Key Distribution
+- Mediator storage for keys?
+- DB encrypted statements
+- DEMO
