@@ -20,7 +20,7 @@ public class TestInsurance {
 		Insurance test = new Insurance("AEG", "Amsterdam", "Haaksbergerstraat 112");
 		try {
 			test.persist();
-			Assert.assertNotEquals(test.getId(), DBUtils.ID_NOT_SET);
+			Assert.assertNotSame(test.getId(), DBUtils.ID_NOT_SET);
 			
 			long newNoInsurances = DBUtils.getInsurances().size();
 			Assert.assertEquals(initialNoInsurances + 1, newNoInsurances);

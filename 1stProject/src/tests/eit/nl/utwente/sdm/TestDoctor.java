@@ -20,7 +20,7 @@ public class TestDoctor {
 		Doctor test = new Doctor("Cristian", "Staicu", "EIT", 1, 2);
 		try {
 			test.persist();
-			Assert.assertNotEquals(test.getId(), DBUtils.ID_NOT_SET);
+			Assert.assertNotSame(test.getId(), DBUtils.ID_NOT_SET);
 			
 			long newNoDoctors = DBUtils.getDoctors().size();
 			Assert.assertEquals(initialNoDoctors + 1, newNoDoctors);

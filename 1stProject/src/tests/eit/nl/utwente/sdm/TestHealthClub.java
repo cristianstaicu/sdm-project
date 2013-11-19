@@ -18,7 +18,7 @@ public class TestHealthClub {
 		HealthClub test = new HealthClub("Premium Gym", "Enschede", "Haaksbergerstraat 30");
 		try {
 			test.persist();
-			Assert.assertNotEquals(test.getId(), DBUtils.ID_NOT_SET);
+			Assert.assertNotSame(test.getId(), DBUtils.ID_NOT_SET);
 			
 			long newNoHealthClub = DBUtils.getHealthClubs().size();
 			Assert.assertEquals(initialNoHealthClubs + 1, newNoHealthClub);

@@ -19,7 +19,7 @@ public class TestEmployer {
 		Employer test = new Employer("Cristian", "Staicu");
 		try {
 			test.persist();
-			Assert.assertNotEquals(test.getId(), DBUtils.ID_NOT_SET);
+			Assert.assertNotSame(test.getId(), DBUtils.ID_NOT_SET);
 			
 			long newNoEmployers = DBUtils.getEmployers().size();
 			Assert.assertEquals(initialNoEmployers + 1, newNoEmployers);

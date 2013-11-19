@@ -21,7 +21,7 @@ public class TestHospital {
 		Hospital test = new Hospital("Main Hospital", "Enschede", "Haaksbergerstraat 350");
 		try {
 			test.persist();
-			Assert.assertNotEquals(test.getId(), DBUtils.ID_NOT_SET);
+			Assert.assertNotSame(test.getId(), DBUtils.ID_NOT_SET);
 			
 			long newNoHospitals = DBUtils.getHospitals().size();
 			Assert.assertEquals(initialNoHospitals + 1, newNoHospitals);

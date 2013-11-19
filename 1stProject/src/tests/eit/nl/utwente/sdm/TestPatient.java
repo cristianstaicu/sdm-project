@@ -20,7 +20,7 @@ public class TestPatient {
 		Patient test = new Patient(213, "riccardo", "borto", birthday, "Haaksbergerstraat 82", 42, 32, 451);
 		try {
 			test.persist();
-			Assert.assertNotEquals(test.getId(), DBUtils.ID_NOT_SET);
+			Assert.assertNotSame(test.getId(), DBUtils.ID_NOT_SET);
 			System.out.println(test.getId());
 			long newNoPatients = DBUtils.getPatients().size();
 			Assert.assertEquals(initialNoPatients + 1, newNoPatients);
