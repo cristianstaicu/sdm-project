@@ -5,5 +5,6 @@ TODO LIST:
 - Key Generation for CP-ABE (including mediator)
 - Key Distribution
 - Mediator storage for keys?
+- Definition of Access Control Policies - for attributes
 - DB encrypted statements
 - DEMO
