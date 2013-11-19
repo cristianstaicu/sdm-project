@@ -1,15 +1,12 @@
 package eit.nl.utwente.sdm;
-import java.util.LinkedList;
-import java.util.Random;
 
 
 public class Hospital {
-	int idHospital;
-	String name;
-	String city; //location in database
-	String contact; // could be email or telephone number, to decide, not so important btw
-	LinkedList<Doctor> doctorList; //doctor who are working at this hospital
-	public static int prime = 4801; 
+
+	private int idHospital;
+	private String name;
+	private String city;
+	private String contact;  
 
 		
 	public Hospital(int idHos, String nm, String ct, String cont){
@@ -17,32 +14,44 @@ public class Hospital {
 		name = nm;
 		city = ct;
 		contact = cont;
-		doctorList = new LinkedList<Doctor>(null);
 	}
-	
-	public void setName(String newName){
-		name = newName;
+
+
+	public int getIdHospital() {
+		return idHospital;
 	}
-	
-	//TODO same problem as in Patient class
-	public void setIdHospital(){
-		Random rn = new Random();
-		int id = rn.nextInt(1000000000);
-		id = id%prime;
-		idHospital = id;
+
+
+	public void setIdHospital(int idHospital) {
+		this.idHospital = idHospital;
 	}
-	
-	public void setCity(String newCity){
-		city = newCity;
+
+
+	public String getName() {
+		return name;
 	}
-	
-	public void setContact(String newContact){
-		contact = newContact;
+
+	public void setName(String name) {
+		this.name = name;
 	}
-	
-	public void addDoctor(Doctor doc){
-		doc.setIdHosp(idHospital);
-		doctorList.add(doc);
+
+
+	public String getCity() {
+		return city;
 	}
+
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+
+	public String getContact() {
+		return contact;
+	}
+
+	public void setContact(String contact) {
+		this.contact = contact;
+	}	
 	
 }

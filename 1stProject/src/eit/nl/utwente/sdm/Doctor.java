@@ -4,17 +4,15 @@ import java.util.Random;
 
 public class Doctor {
 	
-	public static int prime = 4801; 
-		
-	int idDoctor;
-	String name;
-	String surname;
-	String department; //could be also an enum
-	int idHospital;
-	int idHealthClub;
+	private int id;
+	private String name;
+	private String surname;
+	private String department; //could be also an enum
+	private int idHospital;
+	private int idHealthClub;
 	
 	public Doctor(int idDoc, String nm, String snm, String dptm, int idHos, int idHc){
-		idDoctor = idDoc;
+		id = idDoc;
 		name = nm;
 		surname = snm;
 		department = dptm;
@@ -22,12 +20,12 @@ public class Doctor {
 		idHealthClub = idHc;
 	}
 	
-//TODO same problem as in Patient class
-	public void setIdDoctor(){
-		Random rn = new Random();
-		int id = rn.nextInt(1000000000);
-		id = id%prime;
-		idDoctor = id;
+	public Doctor(String nm, String snm, String dptm, int idHos, int idHc){
+		name = nm;
+		surname = snm;
+		department = dptm;
+		idHospital = idHos;
+		idHealthClub = idHc;
 	}
 	
 	public void setName(String newName){
@@ -49,5 +47,41 @@ public class Doctor {
 	public void setIdHc (int newIdHc){
 		idHealthClub = newIdHc;
 	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public int getIdHospital() {
+		return idHospital;
+	}
+
+	public void setIdHospital(int idHospital) {
+		this.idHospital = idHospital;
+	}
+
+	public int getIdHealthClub() {
+		return idHealthClub;
+	}
+
+	public void setIdHealthClub(int idHealthClub) {
+		this.idHealthClub = idHealthClub;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public String getDepartment() {
+		return department;
+	}	
 
 }

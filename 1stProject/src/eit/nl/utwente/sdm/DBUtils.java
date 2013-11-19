@@ -6,6 +6,8 @@ import java.sql.SQLException;
 
 public class DBUtils {
 
+	public static final int ID_NOT_SET = -1;
+
 	public static Connection getDBConnection() {
 		Connection dbConnection = null;
 		try {

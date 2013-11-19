@@ -1,13 +1,11 @@
 package eit.nl.utwente.sdm;
-import java.util.Random;
-
 
 public class Insurance {
-	int idInsurance;
-	String name;
-	String city; //location in database
-	String contact; // could be email or telephone number, to decide, not so important btw
-	public static int prime = 4801; 
+	
+	private int idInsurance;
+	private String name;
+	private String city; 
+	private String contact;  
 
 	
 	public Insurance(int idIns, String nm, String ct, String cont){
@@ -16,24 +14,45 @@ public class Insurance {
 		city = ct;
 		contact = cont;
 	}
-	
-	public void setName(String newName){
-		name = newName;
+
+
+	public int getIdInsurance() {
+		return idInsurance;
+	}
+
+
+	public void setIdInsurance(int idInsurance) {
+		this.idInsurance = idInsurance;
+	}
+
+
+	public String getName() {
+		return name;
+	}
+
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+	public String getCity() {
+		return city;
+	}
+
+
+	public void setCity(String city) {
+		this.city = city;
+	}
+
+
+	public String getContact() {
+		return contact;
+	}
+
+
+	public void setContact(String contact) {
+		this.contact = contact;
 	}
 	
-	//TODO same problem as in Patient class
-	public void setIdHospital(){
-		Random rn = new Random();
-		int id = rn.nextInt(1000000000);
-		id = id%prime;
-		idInsurance = id;
-	}
-	
-	public void setCity(String newCity){
-		city = newCity;
-	}
-	
-	public void setContact(String newContact){
-		contact = newContact;
-	}
 }
