@@ -2,7 +2,12 @@ package eit.nl.utwente.sdm;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class DBUtils {
 
@@ -26,5 +31,54 @@ public class DBUtils {
 		return dbConnection;
 	}
 
-	
+	public static List<Patient> getPatients() {
+		List<Patient> result = new ArrayList<Patient>();
+		Connection dbConnection = getDBConnection();
+		PreparedStatement insertData = null;
+		String insertString = "select * from patient";
+		try {
+			insertData = dbConnection.prepareStatement(insertString);
+			ResultSet resultSet = insertData.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt(1);
+				String name = resultSet.getString(2);
+				String surname = resultSet.getString(3);
+				Date bday = resultSet.getDate(4);
+				String address = resultSet.getString(5);
+				int idDoc = resultSet.getInt(6);
+				int idEmp = resultSet.getInt(7);
+				int idIns = resultSet.getInt(8);
+				Patient p = new Patient(id, name, surname, bday, address, idDoc, idEmp, idIns);
+				result.add(p);
+			}
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static List<Insurance> getInsurances() {
+		List<Insurance> result = new ArrayList<Insurance>();
+		Connection dbConnection = getDBConnection();
+		PreparedStatement insertData = null;
+		String insertString = "select * from insurance";
+		try {
+			insertData = dbConnection.prepareStatement(insertString);
+			ResultSet resultSet = insertData.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt(1);
+				String name = resultSet.getString(2);
+				String location = resultSet.getString(3);
+				String contact = resultSet.getString(4);
+				Insurance i = new Insurance(id, name, location, contact);
+				result.add(i);
+			}
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

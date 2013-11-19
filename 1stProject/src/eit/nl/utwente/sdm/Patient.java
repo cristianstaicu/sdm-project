@@ -2,66 +2,76 @@ package eit.nl.utwente.sdm;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 
 public class Patient {
 	
-	private int id = DBUtils.ID_NOT_SET;
+	private int id;
 	private String name;
 	private String surname;
 	private Date birthDate;
+	private String address;
 	private int idDoc;
 	private int idEmpl;
 	private int idIns;
 
-	public Patient(int id, String namePat, String surnamePat, Date birthDatePat,
+	public Patient(int id, String namePat, String surnamePat, Date birthDatePat, String address,
 			int idDocPat, int idEmplPat, int idInsPat) {
 		this.id = id;
 		name = namePat;
 		surname = surnamePat;
 		birthDate = birthDatePat;
 		idDoc = idDocPat;
+		this.address = address;
 		idEmpl = idEmplPat;
 		idIns = idInsPat;
 	}
 	
-	public Patient(String namePat, String surnamePat, Date birthDatePat,
+	public Patient(String namePat, String surnamePat, Date birthDatePat, String address,
 			int idDocPat, int idEmplPat, int idInsPat) {
 		name = namePat;
 		surname = surnamePat;
 		birthDate = birthDatePat;
+		this.address = address;
 		idDoc = idDocPat;
 		idEmpl = idEmplPat;
 		idIns = idInsPat;
 	}
 
 
-	public void insertPatientHealthData() throws SQLException {
+	public void persist() throws SQLException {
 		Connection dbConnection = null;
 		PreparedStatement insertData = null;
 		String insertString = "insert into "
-				+ "personal_health_data"
-				+ "(name, surname, birthdate, gender, address, id_doctor, id_employer, id_insurance) VALUES"
-				+ "(?,?,?,?,?,?,?,?,?)";
+				+ "patient"
+				+ "(name, surname, birthday, address, id_doc, id_emp, id_ins) VALUES"
+				+ "(?,?,?,?,?,?,?)";
 
 		try {
 			dbConnection = DBUtils.getDBConnection();
-			insertData = dbConnection.prepareStatement(insertString);
-			insertData.setString(2, name);
-			insertData.setString(3, surname);
+			insertData = dbConnection.prepareStatement(insertString, Statement.RETURN_GENERATED_KEYS);
+			insertData.setString(1, name);
+			insertData.setString(2, surname);
 			java.sql.Date birthDaySQL = new java.sql.Date(birthDate.getTime());
-			insertData.setDate(4, birthDaySQL);
-			insertData.setInt(7, idDoc);
-			insertData.setInt(8, idEmpl);
-			insertData.setInt(9, idIns);
+			insertData.setDate(3, birthDaySQL);
+			insertData.setString(4, address);
+			insertData.setInt(5, idDoc);
+			insertData.setInt(6, idEmpl);
+			insertData.setInt(7, idIns);
 
 			// execute insert SQL statement
-			insertData.executeUpdate();
+			insertData.execute();
+			ResultSet generatedKeys = insertData.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				setId(generatedKeys.getInt(1));
+			}
 			System.out.println("Record is inserted into DBUSER table!");
 
 		} catch (SQLException e) {
-
+			e.printStackTrace();
 			System.out.println(e.getMessage());
 
 		} finally {
@@ -78,7 +88,6 @@ public class Patient {
 	}
 
 	public int getId() {
-		
 		return id;
 	}
 
@@ -132,6 +141,25 @@ public class Patient {
 
 	public void setIdIns(int idIns) {
 		this.idIns = idIns;
+	}
+
+	public void delete() {
+		if (getId() == DBUtils.ID_NOT_SET) { 
+			//entity not yet persisted
+			return;
+		}
+		Connection dbConnection = null;
+		PreparedStatement sqlStatement = null;
+		String sqlString = "delete from patient where id = ?";
+
+		try {
+			dbConnection = DBUtils.getDBConnection();
+			sqlStatement = dbConnection.prepareStatement(sqlString);
+			sqlStatement.setInt(1, getId());
+			sqlStatement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 }
