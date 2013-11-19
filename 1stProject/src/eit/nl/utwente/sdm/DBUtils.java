@@ -127,4 +127,51 @@ public class DBUtils {
 		}
 	}
 
+	public static List<Employer> getEmployers() {
+		List<Employer> result = new ArrayList<Employer>();
+		Connection dbConnection = getDBConnection();
+		PreparedStatement insertData = null;
+		String insertString = "select * from employer";
+		try {
+			insertData = dbConnection.prepareStatement(insertString);
+			ResultSet resultSet = insertData.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt(1);
+				String name = resultSet.getString(2);
+				String surname = resultSet.getString(3);
+				Employer i = new Employer(id, name, surname);
+				result.add(i);
+			}
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}		
+	}
+
+	public static List<Doctor> getDoctors() {
+		List<Doctor> result = new ArrayList<Doctor>();
+		Connection dbConnection = getDBConnection();
+		PreparedStatement insertData = null;
+		String insertString = "select * from doctor";
+		try {
+			insertData = dbConnection.prepareStatement(insertString);
+			ResultSet resultSet = insertData.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt(1);
+				String name = resultSet.getString(2);
+				String surname = resultSet.getString(3);
+				String department = resultSet.getString(4);
+				int idHosp = resultSet.getInt(5);
+				int idHc = resultSet.getInt(6);
+				Doctor i = new Doctor(id, name, surname, department, idHosp, idHc);
+				result.add(i);
+			}
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}		
+	}
+
 }
