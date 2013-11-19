@@ -81,4 +81,50 @@ public class DBUtils {
 		}
 	}
 
+	public static List<Hospital> getHospitals() {
+		List<Hospital> result = new ArrayList<Hospital>();
+		Connection dbConnection = getDBConnection();
+		PreparedStatement insertData = null;
+		String insertString = "select * from hospital";
+		try {
+			insertData = dbConnection.prepareStatement(insertString);
+			ResultSet resultSet = insertData.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt(1);
+				String name = resultSet.getString(2);
+				String location = resultSet.getString(3);
+				String contact = resultSet.getString(4);
+				Hospital i = new Hospital(id, name, location, contact);
+				result.add(i);
+			}
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	public static List<HealthClub> getHealthClubs() {
+		List<HealthClub> result = new ArrayList<HealthClub>();
+		Connection dbConnection = getDBConnection();
+		PreparedStatement insertData = null;
+		String insertString = "select * from health_club";
+		try {
+			insertData = dbConnection.prepareStatement(insertString);
+			ResultSet resultSet = insertData.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt(1);
+				String name = resultSet.getString(2);
+				String location = resultSet.getString(3);
+				String contact = resultSet.getString(4);
+				HealthClub i = new HealthClub(id, name, location, contact);
+				result.add(i);
+			}
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
 }

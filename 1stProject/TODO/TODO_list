@@ -8,7 +8,7 @@ TODO LIST:
 - Definition of Access Control Policies - for attributes
 - DB encrypted statements
 - DEMO
-- make id column in insurance auto_incrementable
+- make id column in insurance, health_club, hospital auto_incrementable
 
 Not necessary but to add more sense to the picture: --> Logs for Mediator in order
 to preserve accountability and non repudiation.

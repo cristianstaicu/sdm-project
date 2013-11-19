@@ -1,29 +1,40 @@
 package eit.nl.utwente.sdm;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
 public class Hospital {
 
-	private int idHospital;
+	private int id;
 	private String name;
-	private String city;
+	private String location;
 	private String contact;  
 
 		
 	public Hospital(int idHos, String nm, String ct, String cont){
-		idHospital = idHos;
+		id = idHos;
 		name = nm;
-		city = ct;
+		location = ct;
 		contact = cont;
 	}
 
+	public Hospital(String nm, String ct, String cont){
+		name = nm;
+		location = ct;
+		contact = cont;
+	}	 
 
-	public int getIdHospital() {
-		return idHospital;
+	public int getId() {
+		return id;
 	}
 
 
-	public void setIdHospital(int idHospital) {
-		this.idHospital = idHospital;
+	public void setId(int idHospital) {
+		this.id = idHospital;
 	}
 
 
@@ -37,14 +48,13 @@ public class Hospital {
 
 
 	public String getCity() {
-		return city;
+		return location;
 	}
 
 
 	public void setCity(String city) {
-		this.city = city;
+		this.location = city;
 	}
-
 
 	public String getContact() {
 		return contact;
@@ -54,4 +64,62 @@ public class Hospital {
 		this.contact = contact;
 	}	
 	
+	public void persist() throws SQLException {
+		Connection dbConnection = null;
+		PreparedStatement insertData = null;
+		String insertString = "insert into "
+				+ "hospital"
+				+ "(name, location, contact) VALUES"
+				+ "(?,?,?)";
+
+		try {
+			dbConnection = DBUtils.getDBConnection();
+			insertData = dbConnection.prepareStatement(insertString, Statement.RETURN_GENERATED_KEYS);
+			insertData.setString(1, name);
+			insertData.setString(2, location);
+			insertData.setString(3, contact);
+
+			// execute insert SQL statement
+			insertData.execute();
+			ResultSet generatedKeys = insertData.getGeneratedKeys();
+			if (generatedKeys.next()) {
+				setId(generatedKeys.getInt(1));
+			}
+			System.out.println("New hospital was persisted");
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			System.out.println(e.getMessage());
+
+		} finally {
+
+			if (insertData != null) {
+				insertData.close();
+			}
+
+			if (dbConnection != null) {
+				dbConnection.close();
+			}
+
+		}
+	}	
+	
+	public void delete() {
+		if (getId() == DBUtils.ID_NOT_SET) { 
+			//entity not yet persisted
+			return;
+		}
+		Connection dbConnection = null;
+		PreparedStatement sqlStatement = null;
+		String sqlString = "delete from hospital where id = ?";
+
+		try {
+			dbConnection = DBUtils.getDBConnection();
+			sqlStatement = dbConnection.prepareStatement(sqlString);
+			sqlStatement.setInt(1, getId());
+			sqlStatement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
