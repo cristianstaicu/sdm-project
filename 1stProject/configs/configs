@@ -1,0 +1,4 @@
+DB_CONNECTION=jdbc:mysql://localhost:3306/sdm_ac
+DB_USER=root
+DB_PASSWORD=alexcandru
+DB_NAME=sdm_ac
