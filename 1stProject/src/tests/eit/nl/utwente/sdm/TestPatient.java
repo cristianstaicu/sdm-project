@@ -4,7 +4,7 @@ import java.util.Date;
 
 import eit.nl.utwente.sdm.Patient;
 
-
+//test patient
 public class TestPatient {
 	
 	public static void main(String [ ] args){
