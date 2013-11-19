@@ -12,4 +12,23 @@ TODO LIST:
 Not necessary but to add more sense to the picture: --> Logs for Mediator in order
 to preserve accountability and non repudiation.
 
+mCP-ABE
+
+SETUP PHASE:
+1.
+- Generate generator g
+- generate a bilinear group G0 of prime order p with generator g
+- generate bilinear map e:G0xG0 --> G1
+
+2.
+- Generate attribute set A={a1,a2,...,an} for some n
+- Generate random elements q,t1,t2,...,tn (they belongs to Zp)
+
+ps= q is "alpha" in the slides --> don't have alpha here :D
+3.
+- Let y=e(g,g)^q
+- Tj = g^tj, where (1 <= j <= n)
+- Public key = (e, g, y, Tj, (1 <= j <= n))
+- Master secret key = (q, tj (1 <= j <= n))
+
 
