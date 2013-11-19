@@ -1,7 +1,7 @@
 package eit.nl.utwente.sdm;
 import java.util.Random;
 
-
+//company
 public class Company {
 	int idCompany;
 	String name;
