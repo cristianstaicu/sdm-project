@@ -24,7 +24,7 @@ public class TestPatient {
 			System.out.println(test.getId());
 			long newNoPatients = DBUtils.getPatients().size();
 			Assert.assertEquals(initialNoPatients + 1, newNoPatients);
-			test.delete();
+//			test.delete();
 			newNoPatients = DBUtils.getPatients().size();
 			Assert.assertEquals(initialNoPatients, newNoPatients);
 		} catch (SQLException e) {
