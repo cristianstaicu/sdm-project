@@ -105,7 +105,7 @@ public abstract class Node {
 		
 	}
 
-	abstract protected String getLabel();
+	abstract public String getLabel();
 
 	public Node getParent() {
 		return parent;

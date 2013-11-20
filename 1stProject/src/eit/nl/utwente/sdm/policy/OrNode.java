@@ -7,7 +7,7 @@ public class OrNode extends Node {
 	}
 
 	@Override
-	protected String getLabel() {
+	public String getLabel() {
 		return "OR";
 	}
 

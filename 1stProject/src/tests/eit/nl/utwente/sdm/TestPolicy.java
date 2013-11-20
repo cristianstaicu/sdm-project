@@ -24,6 +24,11 @@ public class TestPolicy {
 		Node and45 = new OrNode(a4, a5);
 		Node root = new OrNode(ora123, and45);
 		System.out.println(root);
+		Assert.assertSame(getNoLines(root.toString()), 4);
+	}
+
+	private int getNoLines(String rootAsString) {
+		return rootAsString.split("\n").length;
 	}
 	
 }
