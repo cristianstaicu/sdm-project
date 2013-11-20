@@ -46,8 +46,8 @@ public class TestHelper {
 		Field GT = pairing.getGT();
 		Field Zr = pairing.getZr();
 
-		
-		Map<String, Element> attrRand = MCPABEHelper.generateRandomForTree(root, Zr);
+		Element rand = Zr.newRandomElement();
+		Map<String, Element> attrRand = MCPABEHelper.generateRandomForTree(root, Zr, rand);
 		System.out.println(attrRand);
 		Assert.assertTrue(attrRand.containsKey("a1"));
 		Assert.assertTrue(attrRand.containsKey("a2"));
