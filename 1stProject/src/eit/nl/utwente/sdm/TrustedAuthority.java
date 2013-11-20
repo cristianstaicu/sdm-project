@@ -54,9 +54,9 @@ public class TrustedAuthority {
 		ArrayList<Element> mediatorKeyList = new ArrayList<Element>();
 		ArrayList<Element> userKey = new ArrayList<Element>();
 		//compute the base component of the secret key
-		Element u_id = Zr.newRandomElement();
+		Element uid = Zr.newRandomElement();
 		Element q = alpha.duplicate();
-		q = q.sub(u_id);
+		q = q.sub(uid);
 		Element d0 = generator.duplicate();
 		d0 = d0.powZn(q);
 		userKey.add(d0);
@@ -64,23 +64,23 @@ public class TrustedAuthority {
 		System.out.println("d0 = " + d0);			//debug
 
 		for (String attribute : attributes){
-			Element u_j = Zr.newRandomElement();
+			Element uj = Zr.newRandomElement();
 			Element tj = smallTis.get(attribute);  // tj from master key
 			
-			Element gen_dup1 = generator.duplicate();	//avoid generator gets modified
-			Element exp = u_j.duplicate();				//avoid u_j gets modified
+			Element genDup1 = generator.duplicate();	//avoid generator gets modified
+			Element exp = uj.duplicate();				//avoid u_j gets modified
 			exp = exp.div(tj);
 			
-			Element dj_1 = gen_dup1.powZn(exp);
-			System.out.println("dj_1 = " + dj_1);
-			mediatorKeyList.add(dj_1);
+			Element dj1 = genDup1.powZn(exp);
+			System.out.println("dj_1 = " + dj1);
+			mediatorKeyList.add(dj1);
 			
-			Element gen_dup2 = generator.duplicate();	//avoid generator gets modified
-			Element subtr = u_id.duplicate();			//avoid u_id gets modified
-			subtr = subtr.sub(u_j);
-			Element dj_2 = gen_dup2.powZn(subtr.div(tj));
-			System.out.println("dj_2 = " + dj_2);
-			userKey.add(dj_2);
+			Element genDup2 = generator.duplicate();	//avoid generator gets modified
+			Element subtr = uid.duplicate();			//avoid u_id gets modified
+			subtr = subtr.sub(uj);
+			Element dj2 = genDup2.powZn(subtr.div(tj));
+			System.out.println("dj_2 = " + dj2);
+			userKey.add(dj2);
 		}
 		
 		mediatorKey.put("User1_M", mediatorKeyList);
