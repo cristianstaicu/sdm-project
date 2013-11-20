@@ -44,8 +44,8 @@ public class Mediator {
 				return null;
 			}
 			Element medComp = medKeyForUser.getKeyComponent(attribute);
-			Element pubComp = publicKey.getKeyComponent(attribute);
-			Element el = publicKey.bilinearMap.pairing(pubComp, medComp);
+			Element ctComp = ciphertext.getComponents().get(attribute);
+			Element el = publicKey.bilinearMap.pairing(ctComp, medComp);
 			result = result.mul(el);
 		}
 		return result;

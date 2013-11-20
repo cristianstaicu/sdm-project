@@ -44,8 +44,7 @@ public class MCPABEHelper {
 		}
 	}
 	
-	public static Ciphertext encrypt(String message, Node policy, PublicKey pk) {
-		Element srand = pk.Zr.newRandomElement();
+	public static Ciphertext encrypt(String message, Node policy, PublicKey pk, Element srand) {
 		Map<String, Element> attrRand = generateRandomForTree(policy, pk.Zr, srand);
 		Element c0 = pk.generator.duplicate();
 		c0 = c0.powZn(srand);
@@ -59,7 +58,7 @@ public class MCPABEHelper {
 			Element bigTj = pk.getKeyComponent(attribute);
 			Element sj = attrRand.get(attribute);
 			Element cj = bigTj.duplicate();
-			cj.powZn(sj);
+			cj = cj.powZn(sj);
 			cjs.put(attribute, cj);
 		}
 		return new Ciphertext(policy, c0, c1, cjs);
@@ -69,8 +68,8 @@ public class MCPABEHelper {
 		Element secondC = pk.G1.newOneElement();
 		for (String attribute : attributes) {
 			Element medComp = sk.getKeyComponent(attribute);
-			Element pubComp = pk.getKeyComponent(attribute);
-			Element el = pk.bilinearMap.pairing(pubComp, medComp);
+			Element ctComp = ciphertext.getComponents().get(attribute);
+			Element el = pk.bilinearMap.pairing(ctComp, medComp);
 			secondC = secondC.mul(el);
 		}
 		Element thirdC = pk.bilinearMap.pairing(ciphertext.c0, sk.d0);

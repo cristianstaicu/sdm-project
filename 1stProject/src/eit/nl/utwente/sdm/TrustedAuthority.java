@@ -188,5 +188,8 @@ public class TrustedAuthority {
 	public PublicKey getPublicKey() {
 		return publicKey;
 	}
+	public MasterKey getMasterKey() {
+		return masterKey;
+	}
 
 }
