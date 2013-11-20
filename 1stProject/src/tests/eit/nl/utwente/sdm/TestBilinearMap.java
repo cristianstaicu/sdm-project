@@ -1,32 +1,21 @@
-package eit.nl.utwente.sdm;
+package tests.eit.nl.utwente.sdm;
 
-import java.math.BigInteger;
 
+import org.junit.Assert;
+import org.junit.Test;
+
+import it.unisa.dia.gas.jpbc.CurveGenerator;
 import it.unisa.dia.gas.jpbc.CurveParameters;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 import it.unisa.dia.gas.jpbc.Pairing;
-import it.unisa.dia.gas.plaf.jpbc.field.z.ZField;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
-import it.unisa.dia.gas.jpbc.CurveGenerator;
 import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
 
-public class TrustedAuthority {
+public class TestBilinearMap {
 
-	public TrustedAuthority() {
-
-	}
-
-	// still working on it
-	public static void main(String[] args) {
-		TrustedAuthority ta = new TrustedAuthority();
-		ta.createGenerator();
-	}
-
-	private void setup() {
-	}
-
-	private void createGenerator() {
+	@Test
+	public void testDHAssumption() {
 		int rbits = 160;
 		int qbits = 512;
 
@@ -81,11 +70,11 @@ public class TrustedAuthority {
 		/*
 		 * Raise e(g,g) to power z and check if == e(g^a, g^b)
 		 */
-		out = egg.duplicate();
-		System.out.println("e(g, g) = " + out);
-		out.powZn(z);
-		System.out.println("e(g, g)^z = " + out);
-
+		Element out2 = egg.duplicate();
+		System.out.println("e(g, g) = " + out2);
+		out2.powZn(z);
+		System.out.println("e(g, g)^z = " + out2);
+		Assert.assertEquals(out, out2);
 	}
 
 }
