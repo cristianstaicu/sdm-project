@@ -48,7 +48,7 @@ public class TestEncryptionDec extends AbstractBilinearMapTest {
 		attrs.add("a1");
 		attrs.add("a2");
 //		attrs.add("a3");
-		SecretKey usersKey = ta.generateKey(1, attrs);
+		SecretKey usersKey = ta.generateKey("1", attrs);
 		Node a1 = new AttributeNode(null, null, "a1");
 		Node a2 = new AttributeNode(null, null, "a2");
 		Node a3 = new AttributeNode(null, null, "a3");
@@ -79,7 +79,7 @@ public class TestEncryptionDec extends AbstractBilinearMapTest {
 		Assert.assertTrue(cj.isEqual(ct.getComponents().get("a3")));
 				
 		System.out.println("Ciphertext:\n" + ct);
-		Element cMed = mediator.mDecrypt(ct, attrs, 1);
+		Element cMed = mediator.mDecrypt(ct, attrs, "1");
 		String msg = MCPABEHelper.decrypt(attrs, ct, cMed, usersKey, ta.getPublicKey());
 		System.out.println(msg);
 		Assert.assertTrue(message.equals(msg));

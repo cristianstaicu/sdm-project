@@ -6,12 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import eit.nl.utwente.sdm.datastructures.SecretKey;
+
 public class Insurance {
 	
 	private int id;
 	private String name;
 	private String location; 
-	private String contact;  
+	private String contact;
+	//not persisted
+	private SecretKey key;  
 
 	
 	public Insurance(int idIns, String nm, String ct, String cont){
@@ -123,6 +127,10 @@ public class Insurance {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setKey(SecretKey key) {
+		this.key = key;		
 	}
 	
 }

@@ -6,12 +6,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import eit.nl.utwente.sdm.datastructures.SecretKey;
+
 
 public class Employer {
 	
 	private int id;
 	private String name;
-	private String company; 
+	private String company;
+	//not persisted
+	private SecretKey key; 
 
 	
 	public Employer(int idEmp, String nm, String comp){
@@ -111,6 +115,10 @@ public class Employer {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setKey(SecretKey key) {
+		this.key = key;	
 	}
 	
 	

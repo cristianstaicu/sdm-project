@@ -34,20 +34,12 @@ public class TrustedAuthority {
 	public TrustedAuthority(Mediator mediator) {
 		this.mediator = mediator;
 	}
-	public static void main(String [ ] args){
-		Mediator mediator = new Mediator();
-		TrustedAuthority ta = new TrustedAuthority(mediator);
-		List<String> attributes = new ArrayList<String>();
-		attributes.add("12345");
-		attributes.add("ciao");
-		ta.setup(attributes);
-		ta.generateKey(1, attributes);
-	}
+	
 	public void setup(List<String> attributes) {
 		createGenerator();
 		generateMasterKey(attributes);
 		generatePublicKey(attributes);
-		mediator.setPublicKey(publicKey);;
+		mediator.setPublicKey(publicKey);
 	}
 	
 	/**
@@ -55,7 +47,7 @@ public class TrustedAuthority {
 	 * the given attributes and return them and will send to 
 	 * the mediator his part of the key. (for a single user)
 	 */
-	public SecretKey generateKey(long userId, List<String> attributes) {
+	public SecretKey generateKey(String userId, List<String> attributes) {
 		Map<String, Element> mediatorKeyAttrs = new HashMap<String, Element>();
 		Map<String, Element> userKeyAttrs = new HashMap<String, Element>();
 		//compute the base component of the secret key
@@ -190,6 +182,46 @@ public class TrustedAuthority {
 	}
 	public MasterKey getMasterKey() {
 		return masterKey;
+	}
+	
+	public void distributeKeys(List<Patient> patients, List<Doctor> doctors,
+			List<Employer> employers, List<Insurance> insurances) {
+		for (Patient p : patients) {
+			List<String> attributes = new ArrayList<String>();
+			attributes.add(p.getId() + "");
+			SecretKey key = generateKey("P" + p.getId(), attributes);
+			p.setKey(key);
+		}
+		
+		for (Doctor d : doctors) {
+			List<String> attributes = new ArrayList<String>();
+			for (Patient p : patients) {
+				if (p.getIdDoc() == d.getId())
+					attributes.add(p.getId() + "'s Doc");
+			}
+			SecretKey key = generateKey("D" + d.getId(), attributes);
+			d.setKey(key);
+		}
+		
+		for (Insurance i : insurances) {
+			List<String> attributes = new ArrayList<String>();
+			for (Patient p : patients) {
+				if (p.getIdIns() == i.getId())
+					attributes.add(p.getId() + "'s Insurance");
+			}
+			SecretKey key = generateKey("I" + i.getId(), attributes);
+			i.setKey(key);
+		}
+		
+		for (Employer e : employers) {
+			List<String> attributes = new ArrayList<String>();
+			for (Patient p : patients) {
+				if (p.getIdEmpl() == e.getId())
+					attributes.add(p.getId() + "'s Employer");
+			}
+			SecretKey key = generateKey("E" + e.getId(), attributes);
+			e.setKey(key);
+		}
 	}
 
 }

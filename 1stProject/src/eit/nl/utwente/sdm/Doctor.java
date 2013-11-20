@@ -6,6 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import eit.nl.utwente.sdm.datastructures.SecretKey;
+
 
 public class Doctor {
 	
@@ -15,6 +17,8 @@ public class Doctor {
 	private String department; //could be also an enum
 	private int idHospital;
 	private int idHealthClub;
+	//not persisted
+	private SecretKey key;
 	
 	public Doctor(int idDoc, String nm, String snm, String dptm, int idHos, int idHc){
 		id = idDoc;
@@ -148,6 +152,10 @@ public class Doctor {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setKey(SecretKey key) {
+		this.key = key;
 	}
 	
 }

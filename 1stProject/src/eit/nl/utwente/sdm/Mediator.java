@@ -13,12 +13,12 @@ import eit.nl.utwente.sdm.datastructures.PublicKey;
 
 public class Mediator {
 
-	private Map<Long, AttributesKey> keys = new HashMap<Long, AttributesKey>();
+	private Map<String, AttributesKey> keys = new HashMap<String, AttributesKey>();
 	private List<String> revokedAttrs = new ArrayList<String>();
-	private List<Long> banedUsers = new ArrayList<Long>();
+	private List<String> banedUsers = new ArrayList<String>();
 	private PublicKey publicKey;
 
-	public void storeKey(long userId, AttributesKey mediatorsKey) {
+	public void storeKey(String userId, AttributesKey mediatorsKey) {
 		keys .put(userId, mediatorsKey);
 	}
 	
@@ -26,7 +26,7 @@ public class Mediator {
 		this.publicKey = publicKey;
 	}
 	
-	public Element mDecrypt(Ciphertext ciphertext, List<String> attributes, long userId) {
+	public Element mDecrypt(Ciphertext ciphertext, List<String> attributes, String userId) {
 		for (String attribute : attributes)
 			if  (revokedAttrs.contains(attribute)) {
 				return null;
@@ -55,7 +55,7 @@ public class Mediator {
 		revokedAttrs .add(attr);
 	}
 	
-	public void banUser(long userId) {
+	public void banUser(String userId) {
 		banedUsers.add(userId);
 	}
 
