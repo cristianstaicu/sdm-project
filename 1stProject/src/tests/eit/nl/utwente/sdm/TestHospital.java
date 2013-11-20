@@ -1,14 +1,11 @@
 package tests.eit.nl.utwente.sdm;
 import java.sql.SQLException;
-import java.util.Date;
 
 import org.junit.Assert;
 import org.junit.Test;
 
 import eit.nl.utwente.sdm.DBUtils;
 import eit.nl.utwente.sdm.Hospital;
-import eit.nl.utwente.sdm.Insurance;
-import eit.nl.utwente.sdm.Patient;
 
 public class TestHospital {
 	

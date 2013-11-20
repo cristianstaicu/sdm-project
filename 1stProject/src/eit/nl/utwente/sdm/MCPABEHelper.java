@@ -4,9 +4,7 @@ import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import eit.nl.utwente.sdm.datastructures.Ciphertext;
@@ -28,7 +26,7 @@ public class MCPABEHelper {
 		return result;
 	}
 
-	private static void computeRandom(Map<String, Element> attributesRandom, Node tree, Field field,
+	private static void computeRandom(Map<String, Element> attributesRandom, Node tree, Field<Element> field,
 			Element s) {
 		if (tree instanceof AttributeNode) {
 			attributesRandom.put(tree.getLabel(), s);

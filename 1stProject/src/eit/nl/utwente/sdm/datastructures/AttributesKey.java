@@ -24,5 +24,9 @@ public class AttributesKey {
 	public void addKeyComponent(String attribute, Element el) {
 		attributesComponents.put(attribute, el);
 	}
+
+	public boolean containsComponent(String attribute) {
+		return attributesComponents.containsKey(attribute);
+	}
 	
 }

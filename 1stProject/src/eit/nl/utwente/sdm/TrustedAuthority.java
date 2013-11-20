@@ -20,9 +20,9 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
 public class TrustedAuthority {
 
 	private Pairing pairing;
-	private Field G0;
-	private Field G1;
-	private Field Zr;
+	private Field<Element> G0;
+	private Field<Element> G1;
+	private Field<Element> Zr;
 	private Element generator;
 	
 	private Element alpha;
@@ -47,6 +47,7 @@ public class TrustedAuthority {
 		createGenerator();
 		generateMasterKey(attributes);
 		generatePublicKey(attributes);
+		mediator.setPublicKey(publicKey);;
 	}
 	
 	/**
@@ -123,6 +124,7 @@ public class TrustedAuthority {
 		this.publicKey = new  PublicKey(pairing, G0, G1, generator, ypsilon, bigTis);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void createGenerator() {
 		int rbits = 160;
 		int qbits = 512;

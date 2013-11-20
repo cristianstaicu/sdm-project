@@ -14,6 +14,7 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
 
 public class TestBilinearMap {
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testDHAssumption() {
 		int rbits = 160;
@@ -23,9 +24,9 @@ public class TestBilinearMap {
 		CurveParameters params = curveGenerator.generate();
 
 		Pairing pairing = PairingFactory.getPairing(params);
-		Field G1 = pairing.getG1();
-		Field GT = pairing.getGT();
-		Field Zr = pairing.getZr();
+		Field<Element> G1 = pairing.getG1();
+		Field<Element> GT = pairing.getGT();
+		Field<Element> Zr = pairing.getZr();
 		/*
 		 * Suppose you want to compute the following pairing out = e(in1, in2),
 		 * where in1 must be in the group G1, in2 must be in the group G2 and

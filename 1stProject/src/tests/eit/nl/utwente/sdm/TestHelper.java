@@ -21,6 +21,7 @@ import eit.nl.utwente.sdm.policy.OrNode;
 
 public class TestHelper {
 
+	@SuppressWarnings({ "unused", "unchecked" })
 	@Test
 	public void testHelper() {
 		Node a1 = new AttributeNode(null, null, "a1");
@@ -42,9 +43,9 @@ public class TestHelper {
 		CurveParameters params = curveGenerator.generate();
 
 		Pairing pairing = PairingFactory.getPairing(params);
-		Field G1 = pairing.getG1();
-		Field GT = pairing.getGT();
-		Field Zr = pairing.getZr();
+		Field<Element> G1 = pairing.getG1();
+		Field<Element> GT = pairing.getGT();
+		Field<Element> Zr = pairing.getZr();
 
 		Element rand = Zr.newRandomElement();
 		Map<String, Element> attrRand = MCPABEHelper.generateRandomForTree(root, Zr, rand);

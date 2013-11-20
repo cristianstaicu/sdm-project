@@ -12,6 +12,7 @@ import org.junit.Test;
 
 public class TestDivision {
 	
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testDivision(){
 		int rbits = 160;
@@ -21,9 +22,9 @@ public class TestDivision {
 		CurveParameters params = curveGenerator.generate();
 
 		Pairing pairing = PairingFactory.getPairing(params);
-		Field G1 = pairing.getG1();
-		Field GT = pairing.getGT();
-		Field Zr = pairing.getZr();
+		Field<Element> G1 = pairing.getG1();
+		Field<Element> GT = pairing.getGT();
+		Field<Element> Zr = pairing.getZr();
 		
 		Element generator, egg;
 		do {

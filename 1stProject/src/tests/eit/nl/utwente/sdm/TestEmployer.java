@@ -6,7 +6,6 @@ import org.junit.Test;
 
 import eit.nl.utwente.sdm.DBUtils;
 import eit.nl.utwente.sdm.Employer;
-import eit.nl.utwente.sdm.HealthClub;
 
 public class TestEmployer {
 	

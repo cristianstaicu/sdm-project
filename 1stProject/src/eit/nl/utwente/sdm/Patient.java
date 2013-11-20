@@ -183,7 +183,6 @@ public class Patient {
 		for (AttributeNode attnodes : list){
 			OrNode or1 = new OrNode(idPatientNode, attnodes);
 		}
-		
 	}
 
 }
