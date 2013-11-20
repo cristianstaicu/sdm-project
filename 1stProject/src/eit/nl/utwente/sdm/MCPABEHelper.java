@@ -45,12 +45,12 @@ public class MCPABEHelper {
 	}
 	
 	public static Ciphertext encrypt(String message, Node policy, PublicKey pk) {
-		Element srand = pk.G0.newRandomElement();
-		Map<String, Element> attrRand = generateRandomForTree(policy, pk.G0, srand);
+		Element srand = pk.Zr.newRandomElement();
+		Map<String, Element> attrRand = generateRandomForTree(policy, pk.Zr, srand);
 		Element c0 = pk.generator.duplicate();
-//		c0 = c0.powZn(srand);
+		c0 = c0.powZn(srand);
 		Element c1 = pk.ypsilon.duplicate();
-//		c1 = c1.powZn(srand);
+		c1 = c1.powZn(srand);
 		BigInteger msgBigInt = new BigInteger(message.getBytes());
 		Element msgEl = pk.G1.newElement(msgBigInt);
 		c1 = c1.mul(msgEl);
@@ -59,7 +59,7 @@ public class MCPABEHelper {
 			Element bigTj = pk.getKeyComponent(attribute);
 			Element sj = attrRand.get(attribute);
 			Element cj = bigTj.duplicate();
-//			cj.powZn(sj);
+			cj.powZn(sj);
 			cjs.put(attribute, cj);
 		}
 		return new Ciphertext(policy, c0, c1, cjs);

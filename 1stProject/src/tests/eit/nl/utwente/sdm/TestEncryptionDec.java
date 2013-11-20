@@ -13,6 +13,7 @@ import eit.nl.utwente.sdm.MCPABEHelper;
 import eit.nl.utwente.sdm.Mediator;
 import eit.nl.utwente.sdm.TrustedAuthority;
 import eit.nl.utwente.sdm.datastructures.Ciphertext;
+import eit.nl.utwente.sdm.datastructures.PublicKey;
 import eit.nl.utwente.sdm.datastructures.SecretKey;
 import eit.nl.utwente.sdm.policy.AndNode;
 import eit.nl.utwente.sdm.policy.AttributeNode;
@@ -58,10 +59,12 @@ public class TestEncryptionDec extends AbstractBilinearMapTest {
 		Node ora123 = new OrNode(anda12, a3);
 		Node and45 = new OrNode(a4, a5);
 		Node policyRoot = new OrNode(ora123, and45);
-		Element gen = ta.getPublicKey().generator;
-		System.out.println(gen.powZn(gen));
 		Ciphertext ct = MCPABEHelper.encrypt("Abracadabra", policyRoot, ta.getPublicKey());
 		System.out.println("Ciphertext:\n" + ct);
+		Element cMed = mediator.mDecrypt(ct, attrs, 1);
+		String msg = MCPABEHelper.decrypt(attrs, ct, cMed, usersKey, ta.getPublicKey());
+		System.out.println(msg);
+		Assert.assertTrue("Abracadabra".equals(msg));
 	}
 	
 }

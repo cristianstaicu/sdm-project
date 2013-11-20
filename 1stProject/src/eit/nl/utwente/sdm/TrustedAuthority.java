@@ -121,7 +121,7 @@ public class TrustedAuthority {
 			System.out.print(", T_" + i++ + " = " + bigTi);
 		}
 		System.out.println(")");
-		this.publicKey = new  PublicKey(pairing, G0, G1, generator, ypsilon, bigTis);
+		this.publicKey = new  PublicKey(pairing, G0, G1, Zr, generator, ypsilon, bigTis);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -152,7 +152,6 @@ public class TrustedAuthority {
 			generator = G0.newRandomElement();
 			egg = pairing.pairing(generator, generator);
 		} while (egg.equals(G1.newOneElement()));
-		System.out.println("g = " + generator);
 
 		/*
 		 * Pick a, b two elements from Zr and compute z = a * b. Careful that

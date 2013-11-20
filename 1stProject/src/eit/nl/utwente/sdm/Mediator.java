@@ -34,6 +34,9 @@ public class Mediator {
 		if (banedUsers.contains(userId)) {
 			return null;
 		}
+		if (!keys.containsKey(userId)) {
+			throw new RuntimeException("Mediator does not have key for user " + userId + "!");
+		}
 		AttributesKey medKeyForUser = keys.get(userId);
 		Element result = publicKey.G1.newOneElement();
 		for (String attribute : attributes) {
