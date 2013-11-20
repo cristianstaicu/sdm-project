@@ -24,6 +24,12 @@ public class Demo {
 		 * Add more IDs for the patients to come
 		 */
 		ta.setup(attributes);
+
+		List<Doctor> doctors = DBUtils.getDoctors();
+		List<Employer> employers = DBUtils.getEmployers();
+		List<Insurance> insurances = DBUtils.getInsurances();
+		
+		ta.distributeKeys(patients, doctors, employers, insurances);
 	}
 
 }

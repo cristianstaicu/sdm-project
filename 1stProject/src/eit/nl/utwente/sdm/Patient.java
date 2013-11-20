@@ -1,5 +1,7 @@
 package eit.nl.utwente.sdm;
+import eit.nl.utwente.sdm.datastructures.SecretKey;
 import eit.nl.utwente.sdm.policy.*;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -18,6 +20,8 @@ public class Patient {
 	private int idDoc;
 	private int idEmpl;
 	private int idIns;
+	//not persisted in DB
+	private SecretKey key;
 
 	public Patient(int id, String namePat, String surnamePat, Date birthDatePat, String address,
 			int idDocPat, int idEmplPat, int idInsPat) {
@@ -183,6 +187,11 @@ public class Patient {
 		for (AttributeNode attnodes : list){
 			OrNode or1 = new OrNode(idPatientNode, attnodes);
 		}
+	}
+
+	public void setKey(SecretKey key) {
+		this.key = key;
+		
 	}
 
 }
