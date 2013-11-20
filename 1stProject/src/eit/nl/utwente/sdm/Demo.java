@@ -6,7 +6,8 @@ import java.util.List;
 public class Demo {
 
 	public static void main(String[] args) {
-		TrustedAuthority ta = new TrustedAuthority();
+		Mediator m = new Mediator();
+		TrustedAuthority ta = new TrustedAuthority(m);
 		/*
 		 * Retrieve entities from DB and pass them to the TA for assigning
 		 * attributes

@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import eit.nl.utwente.sdm.datastructures.AttributesKey;
+import eit.nl.utwente.sdm.datastructures.MasterKey;
+import eit.nl.utwente.sdm.datastructures.PublicKey;
+import eit.nl.utwente.sdm.datastructures.SecretKey;
 import it.unisa.dia.gas.jpbc.CurveParameters;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
@@ -16,26 +20,28 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
 public class TrustedAuthority {
 
 	private Pairing pairing;
+	private Field G0;
 	private Field G1;
-	private Field GT;
 	private Field Zr;
 	private Element generator;
-	private Map<String, Element> smallTis = new HashMap<String, Element>(); //master key
-	private Map<String, Element> bigTis = new HashMap<String, Element>();	//public key
-	private Map<String, List<Element>> mediatorKey = new HashMap<String, List<Element>>();// TODO String should be substitute with the identifier of the user
+	
 	private Element alpha;
 	private Element ypsilon;
+	private MasterKey masterKey;
+	private PublicKey publicKey;
+	private Mediator mediator;
 	
-	public TrustedAuthority() {
-		
+	public TrustedAuthority(Mediator mediator) {
+		this.mediator = mediator;
 	}
 	public static void main(String [ ] args){
-		TrustedAuthority ta = new TrustedAuthority();
+		Mediator mediator = new Mediator();
+		TrustedAuthority ta = new TrustedAuthority(mediator);
 		List<String> attributes = new ArrayList<String>();
 		attributes.add("12345");
 		attributes.add("ciao");
 		ta.setup(attributes);
-		ta.keyGeneration(attributes);
+		ta.keyGeneration(1, attributes);
 	}
 	public void setup(List<String> attributes) {
 		createGenerator();
@@ -48,23 +54,21 @@ public class TrustedAuthority {
 	 * the given attributes and return them and will send to 
 	 * the mediator his part of the key. (for a single user)
 	 */
-	public Map<String, List<Element>> keyGeneration(List<String> attributes) {
-		Map<String, List<Element>> result = new HashMap<String, List<Element>>();
-		ArrayList<Element> mediatorKeyList = new ArrayList<Element>();
-		ArrayList<Element> userKey = new ArrayList<Element>();
+	public SecretKey keyGeneration(long userId, List<String> attributes) {
+		Map<String, Element> mediatorKeyAttrs = new HashMap<String, Element>();
+		Map<String, Element> userKeyAttrs = new HashMap<String, Element>();
 		//compute the base component of the secret key
 		Element uid = Zr.newRandomElement();
 		Element q = alpha.duplicate();
 		q = q.sub(uid);
 		Element d0 = generator.duplicate();
 		d0 = d0.powZn(q);
-		userKey.add(d0);
 		
 		System.out.println("d0 = " + d0);			//debug
 
 		for (String attribute : attributes){
 			Element uj = Zr.newRandomElement();
-			Element tj = smallTis.get(attribute);  // tj from master key
+			Element tj = masterKey.getKeyComponent(attribute);  // tj from master key
 			
 			Element genDup1 = generator.duplicate();	//avoid generator gets modified
 			Element exp = uj.duplicate();				//avoid u_j gets modified
@@ -72,22 +76,19 @@ public class TrustedAuthority {
 			
 			Element dj1 = genDup1.powZn(exp);
 			System.out.println("dj_1 = " + dj1);
-			mediatorKeyList.add(dj1);
+			mediatorKeyAttrs.put(attribute, dj1);
 			
 			Element genDup2 = generator.duplicate();	//avoid generator gets modified
 			Element subtr = uid.duplicate();			//avoid u_id gets modified
 			subtr = subtr.sub(uj);
 			Element dj2 = genDup2.powZn(subtr.div(tj));
 			System.out.println("dj_2 = " + dj2);
-			userKey.add(dj2);
+			userKeyAttrs.put(attribute, dj2);
 		}
-		
-		mediatorKey.put("User1_M", mediatorKeyList);
-		System.out.println("Mediator_key_list= " + mediatorKey);
-		result.put("User1", userKey);
-		System.out.println("result = " + result);
-		
-		return result;
+		AttributesKey mediatorsKey = new AttributesKey(mediatorKeyAttrs);
+		mediator.storeKey(userId, mediatorsKey);
+		SecretKey usersKey = new SecretKey(d0, userKeyAttrs);
+		return usersKey;
 	}
 
 	private void generateMasterKey(List<String> attributes) {
@@ -95,12 +96,14 @@ public class TrustedAuthority {
 		alpha = Zr.newRandomElement();
 		System.out.print("alpha = " + alpha);
 		int i = 0;
+		Map<String, Element> smallTis = new HashMap<String, Element>(); //master key
 		for (String attribute : attributes) {
 			Element ti = Zr.newRandomElement();
 			smallTis.put(attribute, ti);
 			System.out.print(", t_" + i++ + " = " + ti);
 		}
 		System.out.println(")");
+		this.masterKey = new MasterKey(alpha, smallTis);
 	}
 	
 	private void generatePublicKey(List<String> attributes) {
@@ -109,13 +112,15 @@ public class TrustedAuthority {
 		ypsilon = ypsilon.powZn(alpha);
 		System.out.print("y = " + alpha);
 		int i = 0;
+		Map<String, Element> bigTis = new HashMap<String, Element>();
 		for (String attribute : attributes) {
 			Element bigTi = generator.duplicate();
-			bigTi = bigTi.powZn(smallTis.get(attribute));
+			bigTi = bigTi.powZn(masterKey.getKeyComponent(attribute));
 			bigTis.put(attribute, bigTi);
 			System.out.print(", T_" + i++ + " = " + bigTi);
 		}
 		System.out.println(")");
+		this.publicKey = new  PublicKey(pairing, G0, G1, generator, ypsilon, bigTis);
 	}
 
 	private void createGenerator() {
@@ -126,8 +131,8 @@ public class TrustedAuthority {
 		CurveParameters params = curveGenerator.generate();
 
 		pairing = PairingFactory.getPairing(params);
-		G1 = pairing.getG1();
-		GT = pairing.getGT();
+		G0 = pairing.getG1();
+		G1 = pairing.getGT();
 		Zr = pairing.getZr();
 		/*
 		 * Suppose you want to compute the following pairing out = e(in1, in2),
@@ -142,9 +147,9 @@ public class TrustedAuthority {
 		 */
 		Element egg;
 		do {
-			generator = G1.newRandomElement();
+			generator = G0.newRandomElement();
 			egg = pairing.pairing(generator, generator);
-		} while (egg.equals(GT.newOneElement()));
+		} while (egg.equals(G1.newOneElement()));
 		System.out.println("g = " + generator);
 
 		/*

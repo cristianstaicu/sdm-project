@@ -3,6 +3,7 @@ package eit.nl.utwente.sdm;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Field;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -47,10 +48,12 @@ public class MCPABEHelper {
 		Element srand = pk.G0.newRandomElement();
 		Map<String, Element> attrRand = generateRandomForTree(policy, pk.G0, srand);
 		Element c0 = pk.generator.duplicate();
-		c0.powZn(srand);
+		c0 = c0.powZn(srand);
 		Element c1 = pk.ypsilon.duplicate();
-		c1.powZn(srand);
-		//TODO multiply with message
+		c1 = c1.powZn(srand);
+		BigInteger msgBigInt = new BigInteger(message.getBytes());
+		Element msgEl = pk.G1.newElement(msgBigInt);
+		c1 = c1.mul(msgEl);
 		Map<String, Element> cjs = new HashMap<String,Element>();
 		for (String attribute : attrRand.keySet()) {
 			Element bigTj = pk.getKeyComponent(attribute);
