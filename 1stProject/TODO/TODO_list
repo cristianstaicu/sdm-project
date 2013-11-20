@@ -1,49 +1,55 @@
 TODO LIST:
 
-- Mediator Entity
-- Setup phase for CP-ABE
-- Key Generation for CP-ABE (including mediator)
+++ Mediator Entity
+++ Setup phase for CP-ABE
+++ Key Generation for CP-ABE (including mediator) !!!! works just for one user !!!!
+- Encryption
+- Mediator Decryption
+- Decryption
 - Key Distribution
-- Mediator storage for keys?
+- Mediator storage for keys
 - Definition of Access Control Policies - for attributes
 - DB encrypted statements
 - DEMO
-- make id column in insurance, health_club, hospital auto_incrementable
+++ make id column in insurance, health_club, hospital auto_incrementable
+- Policy Structure
+- GUI patient
+- GUI hospital
+- GUI employer
+- GUI insurance
 
-Not necessary but to add more sense to the picture: --> Logs for Mediator in order
-to preserve accountability and non repudiation.
 
 mCP-ABE
 
 SETUP PHASE:
 1.
-- Generate generator g
-- generate a bilinear group G0 of prime order p with generator g
-- generate bilinear map e:G0xG0 --> G1
+++Generate generator g
+++generate a bilinear group G0 of prime order p with generator g
+++generate bilinear map e:G0xG0 --> G1
 
 2.
-- Generate attribute set A={a1,a2,...,an} for some n
-- Generate random elements q,t1,t2,...,tn (they belongs to Zp)
+++Generate attribute set A={a1,a2,...,an} for some n
+++Generate random elements q,t1,t2,...,tn (they belongs to Zp)
 
 ps= q is "alpha" in the slides --> don't have alpha here :D
 3.
-- Let y=e(g,g)^q
-- Tj = g^tj, where (1 <= j <= n)
-- Public key = (e, g, y, Tj, (1 <= j <= n))
-- Master secret key = (q, tj (1 <= j <= n))
+++Let y=e(g,g)^q
+++Tj = g^tj, where (1 <= j <= n)
+++Public key = (e, g, y, Tj, (1 <= j <= n))
+++Master secret key = (q, tj (1 <= j <= n))
 
 KEY GENERATION:
 Assumptions: Alice has 3 attributes w={a1,a2,a3)
 1.
-- Generate a random number u_id which belongs to Z_p
-- d0 = g^(q-u_id)  	where: g is the generator, q is the value from the setup phase
+++Generate a random number u_id which belongs to Z_p
+++d0 = g^(q-u_id)  	where: g is the generator, q is the value from the setup phase
 2.
-- Calculate d1,1 = g^(u1/t1), d2,1= g^(u2/t2)   for each attribute
-- Calculate d1,2 = g^(u_id-u1/t1), d2,2=g^(u_id-u2/t2) for each attribute
+++Calculate d1,1 = g^(u1/t1), d2,1= g^(u2/t2)   for each attribute
+++Calculate d1,2 = g^(u_id-u1/t1), d2,2=g^(u_id-u2/t2) for each attribute
 
 Secret Key:
-- sk1 = {dj,1} for each aj which belongs to w   //user private key
-- sk2 = {dj,2} for each aj which belongs to w	//mediator private key
+++sk1 = {dj,1} for each aj which belongs to w   //mediator private key
+++sk2 = {dj,2} for each aj which belongs to w	//user private key
 
 ENCRYPTION:
 Is done in the same way as in CP-ABE (there are no slides regarding encryption for the mediator, so I
