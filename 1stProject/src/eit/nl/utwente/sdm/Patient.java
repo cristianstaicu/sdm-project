@@ -1,10 +1,11 @@
 package eit.nl.utwente.sdm;
-
+import eit.nl.utwente.sdm.policy.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Patient {
@@ -160,6 +161,29 @@ public class Patient {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private void readAccessPolicy(boolean idDocB, boolean idEmpB, boolean idInsB){
+		OrNode root = new OrNode(null, null);
+		ArrayList<AttributeNode> list = new ArrayList<AttributeNode>();
+		if (idDocB == true){
+			AttributeNode idDocNode = new AttributeNode(null, null, this.idDoc+"");
+			list.add(idDocNode);
+		}
+		if (idEmpB == true){
+			AttributeNode idEmpNode = new AttributeNode(null, null, this.idEmpl+"");
+			list.add(idEmpNode);
+		}
+		if (idInsB == true){
+			AttributeNode idInsNode = new AttributeNode(null, null, this.idIns+"");
+			list.add(idInsNode);
+		}
+		
+		AttributeNode idPatientNode = new AttributeNode(null, null, this.id+"");
+		for (AttributeNode attnodes : list){
+			OrNode or1 = new OrNode(idPatientNode, attnodes);
+		}
+		
 	}
 
 }
