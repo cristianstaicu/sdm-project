@@ -132,5 +132,9 @@ public class Insurance {
 	public void setKey(SecretKey key) {
 		this.key = key;		
 	}
+
+	public SecretKey getKey() {
+		return key;
+	}
 	
 }

@@ -30,6 +30,23 @@ public class Demo {
 		List<Insurance> insurances = DBUtils.getInsurances();
 		
 		ta.distributeKeys(patients, doctors, employers, insurances);
+		System.out.println("===Distributed keys===");
+		System.out.println("-Patients-");
+		for (Patient p : patients) {
+			System.out.println(p.getId() + " " + p.getName() + " " + p.getKey());
+		}
+		System.out.println("-Doctors-");
+		for (Doctor d : doctors) {
+			System.out.println(d.getId() + " " + d.getName() + " " + d.getKey());
+		}
+		System.out.println("-Employers-");
+		for (Employer e : employers) {
+			System.out.println(e.getId() + " " + e.getName() + " " + e.getKey());
+		}
+		System.out.println("-Insurance Companies-");
+		for (Insurance i : insurances) {
+			System.out.println(i.getId() + " " + i.getName() + " " + i.getKey());
+		}
 	}
 
 }

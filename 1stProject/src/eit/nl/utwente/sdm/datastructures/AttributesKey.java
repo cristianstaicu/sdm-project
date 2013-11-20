@@ -29,4 +29,9 @@ public class AttributesKey {
 		return attributesComponents.containsKey(attribute);
 	}
 	
+	@Override
+	public String toString() {
+		return attributesComponents.toString();
+	}
+	
 }

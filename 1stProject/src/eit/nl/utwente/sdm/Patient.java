@@ -194,4 +194,8 @@ public class Patient {
 		
 	}
 
+	public SecretKey getKey() {
+		return key;
+	}
+
 }

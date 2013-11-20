@@ -120,6 +120,10 @@ public class Employer {
 	public void setKey(SecretKey key) {
 		this.key = key;	
 	}
+
+	public SecretKey getKey() {
+		return key;
+	}
 	
 	
 }
