@@ -23,4 +23,13 @@ public class Ciphertext {
 		return cComponents;
 	}
 	
+	@Override
+	public String toString() {
+		String result = "";
+		result += "c0 = " + c0 + "\n";
+		result += "c1 = " + c1 + "\n";
+		result += "ci = " + cComponents + "\n";
+		return result;
+	}
+	
 }

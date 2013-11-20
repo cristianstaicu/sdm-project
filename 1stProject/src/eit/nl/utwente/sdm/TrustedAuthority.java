@@ -41,7 +41,7 @@ public class TrustedAuthority {
 		attributes.add("12345");
 		attributes.add("ciao");
 		ta.setup(attributes);
-		ta.keyGeneration(1, attributes);
+		ta.generateKey(1, attributes);
 	}
 	public void setup(List<String> attributes) {
 		createGenerator();
@@ -55,7 +55,7 @@ public class TrustedAuthority {
 	 * the given attributes and return them and will send to 
 	 * the mediator his part of the key. (for a single user)
 	 */
-	public SecretKey keyGeneration(long userId, List<String> attributes) {
+	public SecretKey generateKey(long userId, List<String> attributes) {
 		Map<String, Element> mediatorKeyAttrs = new HashMap<String, Element>();
 		Map<String, Element> userKeyAttrs = new HashMap<String, Element>();
 		//compute the base component of the secret key
@@ -185,6 +185,9 @@ public class TrustedAuthority {
 		out.powZn(z);
 		System.out.println("e(g, g)^z = " + out);
 
+	}
+	public PublicKey getPublicKey() {
+		return publicKey;
 	}
 
 }

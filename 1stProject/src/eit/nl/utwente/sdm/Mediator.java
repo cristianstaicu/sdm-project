@@ -43,7 +43,7 @@ public class Mediator {
 			Element medComp = medKeyForUser.getKeyComponent(attribute);
 			Element pubComp = publicKey.getKeyComponent(attribute);
 			Element el = publicKey.bilinearMap.pairing(pubComp, medComp);
-			result.mul(el);
+			result = result.mul(el);
 		}
 		return result;
 	}
