@@ -1,6 +1,7 @@
 package eit.nl.utwente.sdm;
 
 import java.math.BigInteger;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,15 +21,23 @@ public class TrustedAuthority {
 	private Field GT;
 	private Field Zr;
 	private Element generator;
-	private Map<String, Element> smallTis = new HashMap<String, Element>();
-	private Map<String, Element> bigTis = new HashMap<String, Element>();
+	private Map<String, Element> smallTis = new HashMap<String, Element>(); //master key
+	private Map<String, Element> bigTis = new HashMap<String, Element>();	//public key
+	private Map<String, List<Element>> mediatorKey = new HashMap<String, List<Element>>();// TODO String should be substitute with the identifier of the user
 	private Element alpha;
 	private Element ypsilon;
 	
 	public TrustedAuthority() {
-
+		
 	}
-
+	public static void main(String [ ] args){
+		TrustedAuthority ta = new TrustedAuthority();
+		List<String> attributes = new ArrayList<String>();
+		attributes.add("12345");
+		attributes.add("ciao");
+		ta.setup(attributes);
+		ta.keyGeneration(attributes);
+	}
 	public void setup(List<String> attributes) {
 		createGenerator();
 		generateMasterKey(attributes);
@@ -38,10 +47,47 @@ public class TrustedAuthority {
 	/**
 	 * This method will generate and return the private key for 
 	 * the given attributes and return them and will send to 
-	 * the mediator his part of the key.
+	 * the mediator his part of the key. (for a single user)
 	 */
-	public Map<String, Element> keyGeneration(List<String> attributes) {
-		Map<String, Element> result = new HashMap<String, Element>();
+	public Map<String, List<Element>> keyGeneration(List<String> attributes) {
+		Map<String, List<Element>> result = new HashMap<String, List<Element>>();
+		ArrayList<Element> mediatorKeyList = new ArrayList<Element>();
+		ArrayList<Element> userKey = new ArrayList<Element>();
+		//compute the base component of the secret key
+		Element u_id = Zr.newRandomElement();
+		Element q = alpha.duplicate();
+		q = q.sub(u_id);
+		Element d0 = generator.duplicate();
+		d0 = d0.powZn(q);
+		userKey.add(d0);
+		
+		System.out.println("d0 = " + d0);			//debug
+
+		for (String attribute : attributes){
+			Element u_j = Zr.newRandomElement();
+			Element tj = smallTis.get(attribute);  // tj from master key
+			
+			Element gen_dup1 = generator.duplicate();	//avoid generator gets modified
+			Element exp = u_j.duplicate();				//avoid u_j gets modified
+			exp = exp.div(tj);
+			
+			Element dj_1 = gen_dup1.powZn(exp);
+			System.out.println("dj_1 = " + dj_1);
+			mediatorKeyList.add(dj_1);
+			
+			Element gen_dup2 = generator.duplicate();	//avoid generator gets modified
+			Element subtr = u_id.duplicate();			//avoid u_id gets modified
+			subtr = subtr.sub(u_j);
+			Element dj_2 = gen_dup2.powZn(subtr.div(tj));
+			System.out.println("dj_2 = " + dj_2);
+			userKey.add(dj_2);
+		}
+		
+		mediatorKey.put("User1_M", mediatorKeyList);
+		System.out.println("Mediator_key_list= " + mediatorKey);
+		result.put("User1", userKey);
+		System.out.println("result = " + result);
+		
 		return result;
 	}
 
