@@ -1,5 +1,9 @@
 package tests.eit.nl.utwente.sdm;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -29,6 +33,42 @@ public class TestPolicy {
 
 	private int getNoLines(String rootAsString) {
 		return rootAsString.split("\n").length;
+	}
+	
+	@Test
+	public void testMinimalAttrsIdentification() {
+		Node a1 = new AttributeNode(null, null, "a1");
+		Node a2 = new AttributeNode(null, null, "a2");
+		Node a3 = new AttributeNode(null, null, "a3");
+		Node a4 = new AttributeNode(null, null, "a4");
+		Node a5 = new AttributeNode(null, null, "a5");
+		
+		Node orNode = new OrNode(a1, a2);
+		List<String> attrs = new ArrayList<String>();
+		attrs.add("a1");
+		attrs.add("a3");
+		Set<String> minimalAttrSet = orNode.getMinimalAttrSet(attrs);
+		Assert.assertSame(minimalAttrSet.size(), 1);
+		Assert.assertTrue(minimalAttrSet.contains("a1"));
+		Node andNode = new AndNode(orNode, a3);
+		minimalAttrSet = andNode.getMinimalAttrSet(attrs);
+		Assert.assertSame(minimalAttrSet.size(), 2);
+		Assert.assertTrue(minimalAttrSet.contains("a1"));
+		Assert.assertTrue(minimalAttrSet.contains("a3"));
+		attrs = new ArrayList<String>();
+		attrs.add("a3");
+		minimalAttrSet = andNode.getMinimalAttrSet(attrs);
+		Assert.assertTrue(minimalAttrSet == null);
+		Node or2Node = new OrNode(a4, a5);
+		Node and2Node = new AndNode(andNode, or2Node);
+		attrs = new ArrayList<String>();
+		attrs.add("a1");
+		attrs.add("a2");
+		attrs.add("a3");
+		attrs.add("a4");
+		attrs.add("a5");
+		System.out.println(and2Node);
+		minimalAttrSet = and2Node.getMinimalAttrSet(attrs);
 	}
 	
 }

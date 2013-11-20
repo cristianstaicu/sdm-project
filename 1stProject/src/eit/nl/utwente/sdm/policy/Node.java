@@ -2,8 +2,10 @@ package eit.nl.utwente.sdm.policy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public abstract class Node {
 
@@ -109,6 +111,57 @@ public abstract class Node {
 
 	public Node getParent() {
 		return parent;
+	}
+	
+	public Set<String> getMinimalAttrSet(List<String> attributes) {
+		Set<HashSet<String>> attrs = getAttrsAsSets();
+		System.out.println(attrs);
+		HashSet<String> minimal = null;
+		for (HashSet<String> requiredAttrs : attrs) {
+			boolean hasAllAttrs = true;
+			for (String currentAttr : requiredAttrs) {
+				if (!attributes.contains(currentAttr)) {
+					hasAllAttrs = false;
+				}
+			}
+			if (hasAllAttrs && (minimal == null || minimal.size() > requiredAttrs.size())) {
+				minimal = requiredAttrs;
+			}
+		}
+		return minimal;
+	}
+
+	/**
+	 * This method assumes all the leafs are of type AttributeNode
+	 */
+	private Set<HashSet<String>> getAttrsAsSets() {
+		Set<HashSet<String>> result = new HashSet<HashSet<String>>();
+		if (this instanceof AttributeNode) {
+			HashSet<String> nodeSet = new HashSet<String>();
+			nodeSet.add(getLabel());
+			result.add(nodeSet);
+		} else if (this instanceof OrNode) {
+			Set<HashSet<String>> requiredLeft = childLeft.getAttrsAsSets();
+			Set<HashSet<String>> requiredRight = childRight.getAttrsAsSets();
+			for (HashSet<String> set : requiredLeft) {
+				result.add(set);
+			}
+			for (HashSet<String> set : requiredRight) {
+				result.add(set);
+			}
+		} else if (this instanceof AndNode) {
+			Set<HashSet<String>> requiredLeft = childLeft.getAttrsAsSets();
+			Set<HashSet<String>> requiredRight = childRight.getAttrsAsSets();
+			for (HashSet<String> setLeft : requiredLeft) {
+				for (HashSet<String> setRight : requiredRight) {
+					HashSet<String> combinedSet = new HashSet<String>();
+					combinedSet.addAll(setLeft);
+					combinedSet.addAll(setRight);
+					result.add(combinedSet);
+				}
+			}
+		}
+		return result;
 	}
 	
 }
