@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `sdm_ac1` /*!40100 DEFAULT CHARACTER SET utf8 */;
-USE `sdm_ac1`;
+CREATE DATABASE  IF NOT EXISTS `sdm_ac` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `sdm_ac`;
 -- MySQL dump 10.13  Distrib 5.6.13, for Win32 (x86)
 --
 -- Host: localhost    Database: sdm_ac1
@@ -113,7 +113,7 @@ CREATE TABLE `health_data` (
   `date` varchar(255) NOT NULL,
   `measurement_type` varchar(255) NOT NULL,
   `statement` varchar(45) DEFAULT NULL,
-  `policy_string` varchar(255) DEFAULT NULL,
+  `policy` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id_UNIQUE` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
