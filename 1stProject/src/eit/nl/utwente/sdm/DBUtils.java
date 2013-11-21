@@ -172,6 +172,35 @@ public class DBUtils {
 			e.printStackTrace();
 			return null;
 		}		
-	} 
+	}
+
+	public static List<HealthRecord> getHealthRecords() {
+		List<HealthRecord> result = new ArrayList<HealthRecord>();
+		Connection dbConnection = getDBConnection();
+		PreparedStatement insertData = null;
+		String insertString = "select * from health_data";
+		try {
+			insertData = dbConnection.prepareStatement(insertString);
+			ResultSet resultSet = insertData.executeQuery();
+			while (resultSet.next()) {
+				int id = resultSet.getInt(1);
+				int idPatient = resultSet.getInt(2);
+				int idHospital = resultSet.getInt(3);
+				int idDoctor = resultSet.getInt(4);
+				int idHealthClub = resultSet.getInt(5);
+				String value = resultSet.getString(6);
+				String data = resultSet.getString(7);
+				int measurementType = resultSet.getInt(8);
+				String statement = resultSet.getString(9);
+				String policy = resultSet.getString(10);
+				
+				HealthRecord hr = new HealthRecord(id, idPatient, idHospital, idDoctor, idHealthClub, measurementType, value, data, statement, policy);
+				result.add(hr);
+			}
+			return result;
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}	} 
 
 }

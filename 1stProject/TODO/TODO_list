@@ -17,3 +17,5 @@ TODO LIST:
 - GUI hospital
 - GUI employer
 - GUI insurance
+- add policy string field to health_data
+- change date to String in health_data
