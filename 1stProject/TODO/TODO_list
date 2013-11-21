@@ -6,9 +6,9 @@ TODO LIST:
 ++ Encryption
 ++ Mediator Decryption
 ++ Decryption
-- Key Distribution
-- Mediator storage for keys
-- Definition of Access Control Policies - for attributes
+++ Key Distribution
+++ Mediator storage for keys
+++ Definition of Access Control Policies - for attributes
 - DB encrypted statements
 - DEMO
 ++ make id column in insurance, health_club, hospital auto_incrementable
@@ -17,5 +17,5 @@ TODO LIST:
 - GUI hospital
 - GUI employer
 - GUI insurance
-- add policy string field to health_data
-- change date to String in health_data
+++ add policy string field to health_data
+++ change date to String in health_data
