@@ -211,4 +211,32 @@ public class HealthRecord {
 		this.idPatient = idPatient;
 	}
 
+	public void updatePolicy(Node policy, PublicKey pk, String value, String date, String statement) {
+		this.policy = policy.getPolicyAsString();
+		Connection dbConnection = null;
+		PreparedStatement sqlStatement = null;
+		String sqlString = "update health_data set policy = ?, value = ?, date = ?, statement = ? where id = ?";
+
+		try {
+			dbConnection = DBUtils.getDBConnection();
+			Element randEl = pk.Zr.newRandomElement();
+			Ciphertext encryptedValue = MCPABEHelper.encrypt(value, policy, pk, randEl);
+			randEl = pk.Zr.newRandomElement();
+			Ciphertext encryptedDate = MCPABEHelper.encrypt(date, policy, pk, randEl);
+			randEl = pk.Zr.newRandomElement();
+			Ciphertext encryptedStat = MCPABEHelper.encrypt(statement, policy, pk, randEl);
+			
+			dbConnection = DBUtils.getDBConnection();
+			sqlStatement = dbConnection.prepareStatement(sqlString);
+			sqlStatement.setString(1, this.policy);
+			sqlStatement.setString(2, encryptedValue.toString());
+			sqlStatement.setString(3, encryptedDate.toString());
+			sqlStatement.setString(4, encryptedStat.toString());
+			sqlStatement.setInt(5, getId());
+			sqlStatement.execute();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+
 }

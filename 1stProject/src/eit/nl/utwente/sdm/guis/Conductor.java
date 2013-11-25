@@ -6,6 +6,7 @@ import java.util.List;
 import eit.nl.utwente.sdm.DBUtils;
 import eit.nl.utwente.sdm.Doctor;
 import eit.nl.utwente.sdm.Employer;
+import eit.nl.utwente.sdm.HealthClub;
 import eit.nl.utwente.sdm.HealthRecord;
 import eit.nl.utwente.sdm.Insurance;
 import eit.nl.utwente.sdm.Mediator;
@@ -23,11 +24,13 @@ public class Conductor {
 		List<Doctor> doctors = DBUtils.getDoctors();
 		List<Employer> employers = DBUtils.getEmployers();
 		List<Insurance> insurances = DBUtils.getInsurances();
+		List<HealthClub> hcs = DBUtils.getHealthClubs();
 		ta.distributeKeys(patients, doctors, employers, insurances);
 		List<HealthRecord> healthRecords = DBUtils.getHealthRecords();
 		Conductor conductor = new Conductor();
 		GUIPatient patientGUI = new GUIPatient(conductor, patients, ta);
 		GUIDoctor guiDoc = new GUIDoctor(conductor, doctors, ta);
+		GUIHealthClub guiHC =  new GUIHealthClub(conductor, hcs, patients, ta);
 		conductor.addGUI(guiDoc);
 		conductor.addGUI(patientGUI);
 	}

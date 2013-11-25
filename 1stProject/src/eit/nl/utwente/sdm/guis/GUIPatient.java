@@ -61,6 +61,7 @@ public class GUIPatient extends JFrame implements IUpdatable {
 	private JCheckBox shareWithEmp;
 	private List<HealthRecord> hrs;
 	private Conductor conductor;
+	private HealthRecord selectedHR;
 
 	public GUIPatient(Conductor conductor, List<Patient> patients, TrustedAuthority ta) {
 		super("GUI Patient");
@@ -117,7 +118,7 @@ public class GUIPatient extends JFrame implements IUpdatable {
 				addPanel.add(shareEmployer);
 				JButton saveButton = new JButton("Save");
 				saveButton.addActionListener(new ActionListener() {
-					
+
 					@Override
 					public void actionPerformed(ActionEvent e) {
 						mainPanel.remove(addPanel);
@@ -126,6 +127,7 @@ public class GUIPatient extends JFrame implements IUpdatable {
 						Patient p = GUIPatient.this.patients.get(patientIndex);
 						Node policy = Patient.getPolicy(p.getId(), shareDoctor.isSelected(), shareInsurance.isSelected(), shareEmployer.isSelected());
 						HealthRecord hr = new HealthRecord(p.getId(), -1, p.getIdDoc(), -1, HealthRecord.USER_INSERTED_HR, valueTF.getText(), dp.getDate().toString(), statementTF.getText(), policy.getPolicyAsString());
+		
 						try {
 							hr.persist(GUIPatient.this.ta.getPublicKey());
 						} catch (SQLException e1) {
@@ -161,7 +163,24 @@ public class GUIPatient extends JFrame implements IUpdatable {
 		policyEditPanel.add(shareWithIns);
 		shareWithEmp = new JCheckBox("Share with employer");
 		policyEditPanel.add(shareWithEmp);
-//		policyEditPanel.setVisible(false);
+		JButton updatePolicy = new JButton("Update");
+		updatePolicy.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				int patientIndex = patList.getSelectedIndex();
+				Patient patient = GUIPatient.this.patients.get(patientIndex);
+				int patientID = patient.getId();
+				Node policy = Patient.getPolicy(patientID, shareWithDoc.isSelected(), shareWithIns.isSelected(), shareWithEmp.isSelected());
+				int hrIndex = hrs.indexOf(selectedHR);
+				String value = (String) table.getModel().getValueAt(hrIndex, 4);
+				String date = (String) table.getModel().getValueAt(hrIndex, 5);
+				String statement = (String) table.getModel().getValueAt(hrIndex, 4);
+				GUIPatient.this.selectedHR.updatePolicy(policy, GUIPatient.this.ta.getPublicKey(), value, date, statement);
+				GUIPatient.this.conductor.update();				
+			}
+		});
+		policyEditPanel.add(updatePolicy);
 		attributes = new JLabel();
 		Patient currentPatient = patients.get(patList.getSelectedIndex());
 		updateUI(currentPatient.getId());
@@ -254,6 +273,7 @@ public class GUIPatient extends JFrame implements IUpdatable {
 				ListSelectionModel model = table.getSelectionModel();  
 				int selectionIndex = model.getLeadSelectionIndex();  
 				HealthRecord hr = hrs.get(selectionIndex);
+				selectedHR = hr;
 				boolean canDecrypt = currentPatient.canDecrypt(hr.getPolicy());
 				if (canDecrypt) {
 					policyEditPanel.setVisible(true);
