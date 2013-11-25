@@ -9,14 +9,14 @@ TODO LIST:
 ++ Key Distribution
 ++ Mediator storage for keys
 ++ Definition of Access Control Policies - for attributes
-- DB encrypted statements
-- DEMO
++ DB encrypted statements
++ DEMO
 ++ make id column in insurance, health_club, hospital auto_incrementable
 ++ Policy Structure
-- GUI patient
++ GUI patient
 - GUI hospital
 - GUI employer
 - GUI insurance
 ++ add policy string field to health_data
 ++ change date to String in health_data
-- change encrypted fields (value, date and statement) to 2048 chars long
++ change encrypted fields (value, date and statement) to 2048 chars long
