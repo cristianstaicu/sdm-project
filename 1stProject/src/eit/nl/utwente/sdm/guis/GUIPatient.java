@@ -177,6 +177,7 @@ public class GUIPatient extends JFrame implements IUpdatable {
 				String date = (String) table.getModel().getValueAt(hrIndex, 5);
 				String statement = (String) table.getModel().getValueAt(hrIndex, 4);
 				GUIPatient.this.selectedHR.updatePolicy(policy, GUIPatient.this.ta.getPublicKey(), value, date, statement);
+				policyEditPanel.setVisible(false);
 				GUIPatient.this.conductor.update();				
 			}
 		});
