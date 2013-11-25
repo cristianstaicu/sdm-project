@@ -16,7 +16,7 @@ import eit.nl.utwente.sdm.Mediator;
 import eit.nl.utwente.sdm.Patient;
 import eit.nl.utwente.sdm.TrustedAuthority;
 import eit.nl.utwente.sdm.datastructures.Ciphertext;
-import eit.nl.utwente.sdm.guis.Demo;
+import eit.nl.utwente.sdm.guis.Conductor;
 
 public class TestHealthData {
 
@@ -28,7 +28,7 @@ public class TestHealthData {
 		Mediator m = new Mediator();
 		TrustedAuthority ta = new TrustedAuthority(m);
 		List<Patient> patients = DBUtils.getPatients();
-		List<String> attributes = Demo.getAttributes(patients);
+		List<String> attributes = Conductor.getAttributes(patients);
 		ta.setup(attributes);
 
 		long initialNoHealthClubs = DBUtils.getHealthRecords().size();

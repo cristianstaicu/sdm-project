@@ -46,7 +46,7 @@ import eit.nl.utwente.sdm.Patient;
 import eit.nl.utwente.sdm.TrustedAuthority;
 import eit.nl.utwente.sdm.policy.Node;
 
-public class GUIPatient extends JFrame {
+public class GUIPatient extends JFrame implements IUpdatable {
 	
 	private List<Patient> patients;
 	private JLabel attributes;
@@ -60,9 +60,11 @@ public class GUIPatient extends JFrame {
 	private JCheckBox shareWithIns;
 	private JCheckBox shareWithEmp;
 	private List<HealthRecord> hrs;
+	private Conductor conductor;
 
-	public GUIPatient(List<Patient> patients, TrustedAuthority ta) {
+	public GUIPatient(Conductor conductor, List<Patient> patients, TrustedAuthority ta) {
 		super("GUI Patient");
+		this.conductor = conductor;
 		this.ta = ta;
 		this.patients = patients;
 		mainPanel = new JPanel();
@@ -79,7 +81,6 @@ public class GUIPatient extends JFrame {
 				JComboBox cb = (JComboBox)e.getSource();
 				int patientIndex = cb.getSelectedIndex();
 				updateUI(GUIPatient.this.patients.get(patientIndex).getId());
-				
 			}
 
 		});
@@ -130,10 +131,11 @@ public class GUIPatient extends JFrame {
 						} catch (SQLException e1) {
 							e1.printStackTrace();
 						}
-						updateTableModel(p);
-						mainPanel.add(tableContainer);
-						tableContainer.setVisible(true);
-						pack();
+						GUIPatient.this.conductor.update();
+//						updateTableModel(p);
+//						mainPanel.add(tableContainer);
+//						tableContainer.setVisible(true);
+//						pack();
 					}
 				});
 				addPanel.add(saveButton);
@@ -303,6 +305,12 @@ public class GUIPatient extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -2418655130994391637L;
+
+	@Override
+	public void update() {
+		int patientIndex = patList.getSelectedIndex();
+		updateUI(GUIPatient.this.patients.get(patientIndex).getId());
+	}
 
 
 }

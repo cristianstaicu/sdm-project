@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -33,7 +34,7 @@ import eit.nl.utwente.sdm.Doctor;
 import eit.nl.utwente.sdm.HealthRecord;
 import eit.nl.utwente.sdm.TrustedAuthority;
 
-public class GUIDoctor extends JFrame {
+public class GUIDoctor extends JFrame implements IUpdatable {
 	
 	private List<Doctor> doctors;
 	private JLabel attributes;
@@ -43,9 +44,12 @@ public class GUIDoctor extends JFrame {
 	private JTable table;
 	private final TrustedAuthority ta;
 	private List<HealthRecord> hrs;
+	private Conductor conductor;
 
-	public GUIDoctor(List<Doctor> doctors, TrustedAuthority ta) {
-		super("GUI Patient");
+	public GUIDoctor(Conductor conductor, List<Doctor> doctors, TrustedAuthority ta) {
+		super("GUI Doctor");
+		this.conductor = conductor;
+		setBounds(new Rectangle(600, 20, 200, 100));
 		this.ta = ta;
 		this.doctors = doctors;
 		mainPanel = new JPanel();
@@ -180,5 +184,11 @@ public class GUIDoctor extends JFrame {
 	 * 
 	 */
 	private static final long serialVersionUID = -2418655130994391637L;
+
+	@Override
+	public void update() {
+		Doctor currentPatient = doctors.get(docList.getSelectedIndex());
+		updateUI(currentPatient.getId());
+	}
 
 }

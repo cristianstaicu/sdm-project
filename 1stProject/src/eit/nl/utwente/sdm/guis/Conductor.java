@@ -12,23 +12,33 @@ import eit.nl.utwente.sdm.Mediator;
 import eit.nl.utwente.sdm.Patient;
 import eit.nl.utwente.sdm.TrustedAuthority;
 
-public class Demo {
+public class Conductor {
 
 	public static void main(String[] args) {
 		Mediator m = new Mediator();
 		TrustedAuthority ta = new TrustedAuthority(m);
 		List<Patient> patients = DBUtils.getPatients();
-		List<String> attributes = Demo.getAttributes(patients);
+		List<String> attributes = Conductor.getAttributes(patients);
 		ta.setup(attributes);
 		List<Doctor> doctors = DBUtils.getDoctors();
 		List<Employer> employers = DBUtils.getEmployers();
 		List<Insurance> insurances = DBUtils.getInsurances();
 		ta.distributeKeys(patients, doctors, employers, insurances);
 		List<HealthRecord> healthRecords = DBUtils.getHealthRecords();
-//		GUIPatient patientGUI = new GUIPatient(patients, ta);
-		GUIDoctor guiDoc = new GUIDoctor(doctors, ta);
+		Conductor conductor = new Conductor();
+		GUIPatient patientGUI = new GUIPatient(conductor, patients, ta);
+		GUIDoctor guiDoc = new GUIDoctor(conductor, doctors, ta);
+		conductor.addGUI(guiDoc);
+		conductor.addGUI(patientGUI);
 	}
+
+	private List<IUpdatable> guis = new ArrayList<IUpdatable>();
 	
+	private void addGUI(IUpdatable gui) {
+		guis.add(gui);
+		
+	}
+
 	public static List<String> getAttributes(List<Patient> patients) {
 		List<String> attributes = new ArrayList<String>();
 		for (Patient patient : patients) {
@@ -38,6 +48,12 @@ public class Demo {
 			attributes.add("patient" + patient.getId() + "'sEmployer");
 		}
 		return attributes;
+	}
+
+	public void update() {
+		for (IUpdatable upd : guis) {
+			upd.update();
+		}
 	}
 
 }

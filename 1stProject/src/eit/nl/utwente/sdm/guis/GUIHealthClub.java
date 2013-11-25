@@ -308,7 +308,7 @@ public class GUIHealthClub extends JFrame {
 		Mediator m = new Mediator();
 		TrustedAuthority ta = new TrustedAuthority(m);
 		List<Patient> patients = DBUtils.getPatients();
-		List<String> attributes = Demo.getAttributes(patients);
+		List<String> attributes = Conductor.getAttributes(patients);
 		ta.setup(attributes);
 		List<Doctor> doctors = DBUtils.getDoctors();
 		List<Employer> employers = DBUtils.getEmployers();
