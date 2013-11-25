@@ -46,7 +46,7 @@ import eit.nl.utwente.sdm.Patient;
 import eit.nl.utwente.sdm.TrustedAuthority;
 import eit.nl.utwente.sdm.policy.Node;
 
-public class GUIPatient extends JFrame {
+public class GUIHealthClub extends JFrame {
 	
 	private List<Patient> patients;
 	private JLabel attributes;
@@ -61,7 +61,7 @@ public class GUIPatient extends JFrame {
 	private JCheckBox shareWithEmp;
 	private List<HealthRecord> hrs;
 
-	public GUIPatient(List<Patient> patients, TrustedAuthority ta) {
+	public GUIHealthClub(List<Patient> patients, TrustedAuthority ta) {
 		super("GUI Patient");
 		this.ta = ta;
 		this.patients = patients;
@@ -78,7 +78,7 @@ public class GUIPatient extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				JComboBox cb = (JComboBox)e.getSource();
 				int patientIndex = cb.getSelectedIndex();
-				updateUI(GUIPatient.this.patients.get(patientIndex).getId());
+				updateUI(GUIHealthClub.this.patients.get(patientIndex).getId());
 				
 			}
 
@@ -122,11 +122,11 @@ public class GUIPatient extends JFrame {
 						mainPanel.remove(addPanel);
 						addPanel.setVisible(false);
 						int patientIndex = patList.getSelectedIndex();
-						Patient p = GUIPatient.this.patients.get(patientIndex);
+						Patient p = GUIHealthClub.this.patients.get(patientIndex);
 						Node policy = Patient.getPolicy(p.getId(), shareDoctor.isSelected(), shareInsurance.isSelected(), shareEmployer.isSelected());
 						HealthRecord hr = new HealthRecord(p.getId(), -1, p.getIdDoc(), -1, HealthRecord.USER_INSERTED_HR, valueTF.getText(), dp.getDate().toString(), statementTF.getText(), policy.getPolicyAsString());
 						try {
-							hr.persist(GUIPatient.this.ta.getPublicKey());
+							hr.persist(GUIHealthClub.this.ta.getPublicKey());
 						} catch (SQLException e1) {
 							e1.printStackTrace();
 						}
@@ -270,7 +270,7 @@ public class GUIPatient extends JFrame {
 				} else {
 					System.out.println("HIDDED");
 					policyEditPanel.setVisible(false);
-					GUIPatient.this.pack();
+					GUIHealthClub.this.pack();
 				}		
 				
 			}
@@ -304,5 +304,18 @@ public class GUIPatient extends JFrame {
 	 */
 	private static final long serialVersionUID = -2418655130994391637L;
 
+	public static void main(String[] args) {
+		Mediator m = new Mediator();
+		TrustedAuthority ta = new TrustedAuthority(m);
+		List<Patient> patients = DBUtils.getPatients();
+		List<String> attributes = Demo.getAttributes(patients);
+		ta.setup(attributes);
+		List<Doctor> doctors = DBUtils.getDoctors();
+		List<Employer> employers = DBUtils.getEmployers();
+		List<Insurance> insurances = DBUtils.getInsurances();
+		ta.distributeKeys(patients, doctors, employers, insurances);
+		List<HealthRecord> healthRecords = DBUtils.getHealthRecords();
+		GUIHealthClub patientGUI = new GUIHealthClub(patients, ta);
+	}
 
 }

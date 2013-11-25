@@ -35,7 +35,7 @@ public class Mediator {
 			return null;
 		}
 		if (!keys.containsKey(userId)) {
-			throw new RuntimeException("Mediator does not have key for user " + userId + "!");
+			throw new RuntimeException("Mediator does not have key for user " + userId + "!" );
 		}
 		AttributesKey medKeyForUser = keys.get(userId);
 		Element result = publicKey.G1.newOneElement();
@@ -44,7 +44,13 @@ public class Mediator {
 				return null;
 			}
 			Element medComp = medKeyForUser.getKeyComponent(attribute);
+			if (medComp == null){
+				throw new RuntimeException("Mediator does not have key component for attribute" + attribute + "!" );
+			}
 			Element ctComp = ciphertext.getComponents().get(attribute);
+			if (ctComp == null){
+				throw new RuntimeException("Ciphertext does not contain component for attribute " + attribute + "!" );
+			}
 			Element el = publicKey.bilinearMap.pairing(ctComp, medComp);
 			result = result.mul(el);
 		}

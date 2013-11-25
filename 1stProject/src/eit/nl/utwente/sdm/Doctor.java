@@ -1,12 +1,20 @@
 package eit.nl.utwente.sdm;
 
+import it.unisa.dia.gas.jpbc.Element;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
+import eit.nl.utwente.sdm.datastructures.Ciphertext;
+import eit.nl.utwente.sdm.datastructures.PublicKey;
 import eit.nl.utwente.sdm.datastructures.SecretKey;
+import eit.nl.utwente.sdm.policy.Node;
 
 
 public class Doctor {
@@ -19,6 +27,7 @@ public class Doctor {
 	private int idHealthClub;
 	//not persisted
 	private SecretKey key;
+	private Mediator mediator;
 	
 	public Doctor(int idDoc, String nm, String snm, String dptm, int idHos, int idHc){
 		id = idDoc;
@@ -79,6 +88,10 @@ public class Doctor {
 
 	public void setIdHealthClub(int idHealthClub) {
 		this.idHealthClub = idHealthClub;
+	}
+	
+	public void setMediator(Mediator m) {
+		this.mediator = m;
 	}
 
 	public String getName() {
@@ -160,6 +173,31 @@ public class Doctor {
 
 	public SecretKey getKey() {
 		return key;
+	}
+
+	public String getAttributesAsString() {
+		return key.getComponentsAsString();
+	}
+
+	private List<String> getAttributes() {
+		return key.getComponents();
+	}
+
+	public boolean canDecrypt(String policy) {
+		Node pol = Node.deserializeOrPolicy(policy);
+		System.out.println(getAttributes());
+		Set<String> minimalAttrSet = pol.getMinimalAttrSet(getAttributes());
+		System.out.println(minimalAttrSet);
+		return minimalAttrSet != null;
+	}
+
+	public String decrypt(String ctAsString, String policy, PublicKey pk) {
+		Ciphertext ct = new Ciphertext(ctAsString, pk.G0, pk.G1);
+		Node pol = Node.deserializeOrPolicy(policy);
+		List<String> minimalAttrSet = new ArrayList<String>(pol.getMinimalAttrSet(getAttributes()));
+		Element cMed = mediator.mDecrypt(ct, minimalAttrSet, "D" + getId());
+		String msg = MCPABEHelper.decrypt(minimalAttrSet, ct, cMed, key, pk);
+		return msg;
 	}
 	
 }

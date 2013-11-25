@@ -7,6 +7,7 @@ import java.util.Set;
 import org.junit.Assert;
 import org.junit.Test;
 
+import eit.nl.utwente.sdm.Patient;
 import eit.nl.utwente.sdm.policy.AndNode;
 import eit.nl.utwente.sdm.policy.AttributeNode;
 import eit.nl.utwente.sdm.policy.Node;
@@ -69,6 +70,16 @@ public class TestPolicy {
 		attrs.add("a5");
 		System.out.println(and2Node);
 		minimalAttrSet = and2Node.getMinimalAttrSet(attrs);
+	}
+	
+	@Test
+	public void testSerialization() {
+		Node policy = Patient.getPolicy(1, true, false, true);
+		String serializedPolicy = policy.getPolicyAsString();
+		Assert.assertTrue(serializedPolicy.split("OR").length == 3);
+		Node newPolicy = Node.deserializeOrPolicy(serializedPolicy);
+		Assert.assertTrue(serializedPolicy.equals(newPolicy.getPolicyAsString()));
+		Assert.assertTrue(policy.toString().equals(newPolicy.toString()));
 	}
 	
 }

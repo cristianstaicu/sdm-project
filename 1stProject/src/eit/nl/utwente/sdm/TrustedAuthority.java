@@ -123,7 +123,7 @@ public class TrustedAuthority {
 
 		CurveGenerator curveGenerator = new TypeACurveGenerator(rbits, qbits);
 		CurveParameters params = curveGenerator.generate();
-
+		
 		pairing = PairingFactory.getPairing(params);
 		G0 = pairing.getG1();
 		G1 = pairing.getGT();
@@ -188,26 +188,28 @@ public class TrustedAuthority {
 			List<Employer> employers, List<Insurance> insurances) {
 		for (Patient p : patients) {
 			List<String> attributes = new ArrayList<String>();
-			attributes.add(p.getId() + "");
+			attributes.add("patient" + p.getId() + "");
 			SecretKey key = generateKey("P" + p.getId(), attributes);
 			p.setKey(key);
+			p.setMediator(mediator);
 		}
 		
 		for (Doctor d : doctors) {
 			List<String> attributes = new ArrayList<String>();
 			for (Patient p : patients) {
 				if (p.getIdDoc() == d.getId())
-					attributes.add(p.getId() + "'s Doc");
+					attributes.add("patient" + p.getId() + "'sDoc");
 			}
 			SecretKey key = generateKey("D" + d.getId(), attributes);
 			d.setKey(key);
+			d.setMediator(mediator);
 		}
 		
 		for (Insurance i : insurances) {
 			List<String> attributes = new ArrayList<String>();
 			for (Patient p : patients) {
 				if (p.getIdIns() == i.getId())
-					attributes.add(p.getId() + "'s Insurance");
+					attributes.add("patient" + p.getId() + "'sInsurance");
 			}
 			SecretKey key = generateKey("I" + i.getId(), attributes);
 			i.setKey(key);
@@ -217,7 +219,7 @@ public class TrustedAuthority {
 			List<String> attributes = new ArrayList<String>();
 			for (Patient p : patients) {
 				if (p.getIdEmpl() == e.getId())
-					attributes.add(p.getId() + "'s Employer");
+					attributes.add("patient" + p.getId() + "'sEmployer");
 			}
 			SecretKey key = generateKey("E" + e.getId(), attributes);
 			e.setKey(key);

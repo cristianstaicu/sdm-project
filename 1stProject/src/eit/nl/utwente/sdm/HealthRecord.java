@@ -1,10 +1,16 @@
 package eit.nl.utwente.sdm;
 
+import it.unisa.dia.gas.jpbc.Element;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
+import eit.nl.utwente.sdm.datastructures.Ciphertext;
+import eit.nl.utwente.sdm.datastructures.PublicKey;
+import eit.nl.utwente.sdm.policy.Node;
 
 public class HealthRecord {
 	
@@ -124,7 +130,7 @@ public class HealthRecord {
 		this.policy = policy;
 	}
 
-	public void persist() throws SQLException {
+	public void persist(PublicKey pk) throws SQLException {
 		Connection dbConnection = null;
 		PreparedStatement insertData = null;
 		String insertString = "insert into "
@@ -134,16 +140,23 @@ public class HealthRecord {
 
 		try {
 			dbConnection = DBUtils.getDBConnection();
+			Node pol = Node.deserializeOrPolicy(policy);
+			Element randEl = pk.Zr.newRandomElement();
+			Ciphertext encryptedValue = MCPABEHelper.encrypt(value, pol, pk, randEl);
+			randEl = pk.Zr.newRandomElement();
+			Ciphertext encryptedDate = MCPABEHelper.encrypt(date, pol, pk, randEl);
+			randEl = pk.Zr.newRandomElement();
+			Ciphertext encryptedStat = MCPABEHelper.encrypt(statement, pol, pk, randEl);
 			insertData = dbConnection.prepareStatement(insertString,
 					Statement.RETURN_GENERATED_KEYS);
 			insertData.setInt(1, idPatient);
 			insertData.setInt(2, idHospital);
 			insertData.setInt(3, idDoctor);
 			insertData.setInt(4, idHealthClub);
-			insertData.setString(5, value);
-			insertData.setString(6, date);
+			insertData.setString(5, encryptedValue.toString());
+			insertData.setString(6, encryptedDate.toString());
 			insertData.setInt(7, measurementType);
-			insertData.setString(8, statement);
+			insertData.setString(8, encryptedStat.toString());
 			insertData.setString(9, policy);
 
 			// execute insert SQL statement

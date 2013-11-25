@@ -1,6 +1,9 @@
 package eit.nl.utwente.sdm;
+import eit.nl.utwente.sdm.datastructures.Ciphertext;
+import eit.nl.utwente.sdm.datastructures.PublicKey;
 import eit.nl.utwente.sdm.datastructures.SecretKey;
 import eit.nl.utwente.sdm.policy.*;
+import it.unisa.dia.gas.jpbc.Element;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +12,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
+
+import javax.crypto.Cipher;
 
 public class Patient {
 	
@@ -22,6 +29,7 @@ public class Patient {
 	private int idIns;
 	//not persisted in DB
 	private SecretKey key;
+	private Mediator mediator;
 
 	public Patient(int id, String namePat, String surnamePat, Date birthDatePat, String address,
 			int idDocPat, int idEmplPat, int idInsPat) {
@@ -167,28 +175,31 @@ public class Patient {
 		}
 	}
 	
-	private void readAccessPolicy(boolean idDocB, boolean idEmpB, boolean idInsB){
-		OrNode root = new OrNode(null, null);
-		ArrayList<AttributeNode> list = new ArrayList<AttributeNode>();
-		if (idDocB == true){
-			AttributeNode idDocNode = new AttributeNode(null, null, this.idDoc+"");
-			list.add(idDocNode);
+	public static Node getPolicy(int patientID, boolean shareDoctor, boolean shareInsurance, boolean shareEmployer) {
+		Node patieNode = new AttributeNode(null, null, "patient" + patientID+ "");
+		Node docNode = new AttributeNode(null, null, "patient" + patientID + "'sDoc");
+		Node insNode = new AttributeNode(null, null, "patient" + patientID + "'sInsurance");
+		Node empNode = new AttributeNode(null, null, "patient" + patientID + "'sEmployer");
+		Node currNode = patieNode;
+		if (shareDoctor) {
+			OrNode orNode = new OrNode(currNode, docNode);
+			currNode = orNode;
 		}
-		if (idEmpB == true){
-			AttributeNode idEmpNode = new AttributeNode(null, null, this.idEmpl+"");
-			list.add(idEmpNode);
+		if (shareInsurance) {
+			OrNode orNode = new OrNode(currNode, insNode);
+			currNode = orNode;
 		}
-		if (idInsB == true){
-			AttributeNode idInsNode = new AttributeNode(null, null, this.idIns+"");
-			list.add(idInsNode);
+		if (shareEmployer) {
+			OrNode orNode = new OrNode(currNode, empNode);
+			currNode = orNode;
 		}
-		
-		AttributeNode idPatientNode = new AttributeNode(null, null, this.id+"");
-		for (AttributeNode attnodes : list){
-			OrNode or1 = new OrNode(idPatientNode, attnodes);
-		}
+		return currNode;
 	}
-
+	
+	public void setMediator(Mediator med) {
+		this.mediator = med;
+	}
+	
 	public void setKey(SecretKey key) {
 		this.key = key;
 		
@@ -196,6 +207,29 @@ public class Patient {
 
 	public SecretKey getKey() {
 		return key;
+	}
+
+	public String getAttributesAsString() {
+		return key.getComponentsAsString();
+	}
+
+	private List<String> getAttributes() {
+		return key.getComponents();
+	}
+
+	public boolean canDecrypt(String policy) {
+		Node pol = Node.deserializeOrPolicy(policy);
+		System.out.println(getAttributes());
+		Set<String> minimalAttrSet = pol.getMinimalAttrSet(getAttributes());
+		System.out.println(minimalAttrSet);
+		return minimalAttrSet != null;
+	}
+
+	public String decrypt(String ctAsString, String policy, PublicKey pk) {
+		Ciphertext ct = new Ciphertext(ctAsString, pk.G0, pk.G1);
+		Element cMed = mediator.mDecrypt(ct, getAttributes(), "P" + getId());
+		String msg = MCPABEHelper.decrypt(getAttributes(), ct, cMed, key, pk);
+		return msg;
 	}
 
 }

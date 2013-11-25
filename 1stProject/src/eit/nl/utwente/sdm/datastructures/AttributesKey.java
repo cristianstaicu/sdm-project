@@ -2,7 +2,9 @@ package eit.nl.utwente.sdm.datastructures;
 
 import it.unisa.dia.gas.jpbc.Element;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class AttributesKey {
@@ -32,6 +34,26 @@ public class AttributesKey {
 	@Override
 	public String toString() {
 		return attributesComponents.toString();
+	}
+	
+	public String getComponentsAsString() {
+		String result = "";
+		String prev = "";	
+		for (String attr : attributesComponents.keySet()) {
+			if (!prev.equals("")) {
+				result += prev + ", ";
+			}
+			prev = attr;
+		}
+		result += prev;
+		return result;
+	}
+	
+	public List<String> getComponents() {
+		List<String> result = new ArrayList<String>();
+		for (String comp : attributesComponents.keySet())
+			result.add(comp);
+		return result;
 	}
 	
 }

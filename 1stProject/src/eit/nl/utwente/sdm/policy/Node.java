@@ -9,13 +9,13 @@ import java.util.Set;
 
 public abstract class Node {
 
-	public static final int INDENT_LAST_ROW = 15; 
-	
+	public static final int INDENT_LAST_ROW = 15;
+
 	public final Node childLeft;
 	public final Node childRight;
 
 	private Node parent;
-	
+
 	public Node(Node childLeft, Node childRight) {
 		this.childLeft = childLeft;
 		this.childRight = childRight;
@@ -26,9 +26,9 @@ public abstract class Node {
 			childRight.setParent(this);
 		}
 	}
-	
+
 	private void setParent(Node parent) {
-		this.parent = parent;		
+		this.parent = parent;
 	}
 
 	@Override
@@ -50,20 +50,20 @@ public abstract class Node {
 			int distance = width / (currentLevel.size() + 1);
 			for (Node el : currentLevel) {
 				int parentIndent;
-//				System.out.println(el.parent);
+				// System.out.println(el.parent);
 				if (el.parent == null) {
 					parentIndent = width - distance / 2;
-				} else { 
+				} else {
 					parentIndent = indents.get(el.parent);
 				}
 				int noSpaces;
 				if (el.parent != null && el.equals(el.parent.childRight))
 					noSpaces = parentIndent - cursorPosition + distance / 2;
-				else 
+				else
 					noSpaces = parentIndent - cursorPosition - distance / 2;
 				for (int i = 0; i < noSpaces; i++) {
 					result += " ";
-					cursorPosition ++;
+					cursorPosition++;
 				}
 				indents.put(el, cursorPosition);
 				result += el.getLabel();
@@ -91,7 +91,7 @@ public abstract class Node {
 
 	private void setTreeByLevels(Map<Integer, List<Node>> levels,
 			int currentLevel, int noLevels) {
-		if  (levels.containsKey(currentLevel)) {
+		if (levels.containsKey(currentLevel)) {
 			levels.get(currentLevel).add(this);
 		} else {
 			List<Node> currentLevelList = new ArrayList<Node>();
@@ -104,7 +104,7 @@ public abstract class Node {
 		if (childRight != null) {
 			childRight.setTreeByLevels(levels, currentLevel + 1, noLevels);
 		}
-		
+
 	}
 
 	abstract public String getLabel();
@@ -112,7 +112,7 @@ public abstract class Node {
 	public Node getParent() {
 		return parent;
 	}
-	
+
 	public Set<String> getMinimalAttrSet(List<String> attributes) {
 		Set<HashSet<String>> attrs = getAttrsAsSets();
 		System.out.println(attrs);
@@ -124,7 +124,9 @@ public abstract class Node {
 					hasAllAttrs = false;
 				}
 			}
-			if (hasAllAttrs && (minimal == null || minimal.size() > requiredAttrs.size())) {
+			if (hasAllAttrs
+					&& (minimal == null || minimal.size() > requiredAttrs
+							.size())) {
 				minimal = requiredAttrs;
 			}
 		}
@@ -163,5 +165,37 @@ public abstract class Node {
 		}
 		return result;
 	}
-	
+
+	public String getPolicyAsString() {
+		String result = "";
+		if (childLeft != null)
+			result += childLeft.getPolicyAsString();
+		result += " " + getLabel();
+		if (childRight != null)
+			result += childRight.getPolicyAsString();
+		return result;
+	}
+
+	/**
+	 * This method assumes all non-attribute nodes in the policy are or nodes.
+	 * For dealing with and nodes too a parser should be created
+	 */
+	public static Node deserializeOrPolicy(String policyAsString) {
+		String[] attributes = policyAsString.split("OR");
+		if (attributes.length == 0)
+			return null;
+		Node firstAttrNode = new AttributeNode(null, null, attributes[0].trim());
+		if (attributes.length == 1)
+			return firstAttrNode;
+		Node secondAttrNode = new AttributeNode(null, null, attributes[1].trim());
+		Node currentNode = new OrNode(firstAttrNode, secondAttrNode);
+		if (attributes.length == 2)
+			return currentNode;
+		for (int i = 2; i < attributes.length; i++) {
+			Node nd = new AttributeNode(null, null, attributes[i].trim());
+			currentNode = new OrNode(currentNode, nd);
+		}
+		return currentNode;
+	}
+
 }

@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import eit.nl.utwente.sdm.DBUtils;
 import eit.nl.utwente.sdm.Patient;
+import eit.nl.utwente.sdm.policy.Node;
 
 public class TestPatient {
 	
@@ -24,12 +25,30 @@ public class TestPatient {
 			System.out.println(test.getId());
 			long newNoPatients = DBUtils.getPatients().size();
 			Assert.assertEquals(initialNoPatients + 1, newNoPatients);
-//			test.delete();
+			test.delete();
 			newNoPatients = DBUtils.getPatients().size();
 			Assert.assertEquals(initialNoPatients, newNoPatients);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
+	}
+	
+	@Test
+	public void testPolicyGeneration() {
+		Node policy = Patient.getPolicy(1, true, false, true);
+		Assert.assertTrue(policy.toString().split("\n").length == 3);
+		Assert.assertTrue(policy.toString().contains("patient1'sDoc"));
+		Assert.assertTrue(policy.toString().contains("patient1'sEmployer"));
+		Assert.assertTrue(!policy.toString().contains("patient1'sInsurance"));
+		policy = Patient.getPolicy(1, false, true, false);
+		Assert.assertTrue(policy.toString().split("\n").length == 2);
+		Assert.assertTrue(!policy.toString().contains("patient1'sDoc"));
+		Assert.assertTrue(!policy.toString().contains("patient1'sEmployer"));
+		Assert.assertTrue(policy.toString().contains("patient1'sInsurance"));
+		policy = Patient.getPolicy(1, false, false, false);
+		Assert.assertTrue(policy.toString().split("\n").length == 1);
+		Assert.assertTrue(!policy.toString().contains("patient1'sDoc"));
+		Assert.assertTrue(!policy.toString().contains("patient1'sEmployer"));
+		Assert.assertTrue(!policy.toString().contains("patient1'sInsurance"));
 	}
 }

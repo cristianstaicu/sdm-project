@@ -19,3 +19,4 @@ TODO LIST:
 - GUI insurance
 ++ add policy string field to health_data
 ++ change date to String in health_data
+- change encrypted fields (value, date and statement) to 2048 chars long
